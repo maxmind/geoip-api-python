@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import GeoIP
-import GeoIPRecord
 
 gi = GeoIP.open("/usr/local/share/GeoIP/GeoIPCity.dat",GeoIP.GEOIP_STANDARD)
 
