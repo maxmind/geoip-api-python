@@ -1,4 +1,4 @@
-#!/usr/bin/python2.1
+#!/usr/bin/python
 
 import GeoIP
 

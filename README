@@ -2,15 +2,15 @@ Requirements:
 	Python 2.0 or greater
 
 To Install:
-	python2 setup.py build
-	python2 setup.py install
+	python setup.py build
+	python setup.py install
 
 Usage:
 	See test.py for example usage
 
 License:
 
-Copyright (c) 2002 MaxMind.com.
+Copyright (c) 2003 MaxMind.com.
 
 All rights reserved.  This package is free software; it is licensed
 under the GPL.
