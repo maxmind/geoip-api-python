@@ -1,0 +1,5 @@
+1.1.0
+	* Added support for GeoIP ISP and Organization
+
+0.2.0	2002-06-25
+	* Initial Release
