@@ -1,4 +1,7 @@
-1.1.0
+1.2.0	2003-05-08
+	* Added support for GeoIP City
+
+1.1.0	2003-03-18
 	* Added support for GeoIP ISP and Organization
 
 0.2.0	2002-06-25

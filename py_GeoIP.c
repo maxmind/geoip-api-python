@@ -1,7 +1,7 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 2; tab-width: 2 -*- */
 /* py_GeoIP.c
  *
- * Copyright (C) 2002 MaxMind.com
+ * Copyright (C) 2003 MaxMind LLC
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -20,6 +20,7 @@
 
 #include <Python.h>
 #include "GeoIP.h"
+#include "GeoIPCity.h"
 
 staticforward PyTypeObject GeoIP_GeoIPType;
 
@@ -143,6 +144,33 @@ static PyObject * GeoIP_org_by_name_Py(PyObject *self, PyObject *args) {
   return Py_BuildValue("s", retval);
 }
 
+static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
+	PyObject * retval;
+	retval = PyDict_New();
+	PyDict_SetItem(retval,Py_BuildValue("s","country_code"),Py_BuildValue("s",gir->country_code));
+	PyDict_SetItem(retval,Py_BuildValue("s","country_code3"),Py_BuildValue("s",gir->country_code3));
+	PyDict_SetItem(retval,Py_BuildValue("s","country_name"),Py_BuildValue("s",gir->country_name));
+	PyDict_SetItem(retval,Py_BuildValue("s","region"),Py_BuildValue("s",gir->region));
+	PyDict_SetItem(retval,Py_BuildValue("s","city"),Py_BuildValue("s",gir->city));
+	PyDict_SetItem(retval,Py_BuildValue("s","postal_code"),Py_BuildValue("s",gir->postal_code));
+	PyDict_SetItem(retval,Py_BuildValue("s","latitude"),Py_BuildValue("f",gir->latitude));
+	PyDict_SetItem(retval,Py_BuildValue("s","longitude"),Py_BuildValue("f",gir->longitude));
+	PyDict_SetItem(retval,Py_BuildValue("s","dma_code"),Py_BuildValue("i",gir->dma_code));
+	PyDict_SetItem(retval,Py_BuildValue("s","area_code"),Py_BuildValue("i",gir->area_code));
+	return retval;
+}
+
+static PyObject * GeoIP_record_by_addr_Py(PyObject *self, PyObject *args) {
+  char * addr;
+  GeoIPRecord * gir;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &addr)) {
+    return NULL;
+  }
+  gir = GeoIP_record_by_addr(GeoIP->gi, addr);
+	return GeoIP_populate_dict(gir);
+}
+
 static PyMethodDef GeoIP_Object_methods[] = {
   {"country_code_by_name", GeoIP_country_code_by_name_Py, 1, "Lookup Country Code By Name"},
   {"country_name_by_name", GeoIP_country_name_by_name_Py, 1, "Lookup Country Name By Name"},
@@ -150,6 +178,7 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"country_name_by_addr", GeoIP_country_name_by_addr_Py, 1, "Lookup Country Name By IP Address"},
   {"org_by_addr", GeoIP_org_by_addr_Py, 1, "Lookup Organization or ISP By IP Address"},
   {"org_by_name", GeoIP_org_by_name_Py, 1, "Lookup Organization or ISP By Name"},
+  {"record_by_addr", GeoIP_record_by_addr_Py, 1, "Lookup City Region By IP Address"},
   {NULL, NULL, 0, NULL}
 };
 

@@ -6,11 +6,13 @@ To Install:
 	python setup.py install
 
 Usage:
-	See test.py for example usage
+	See test.py for example usage with GeoIP Country
+	See test_org.py for example usage with GeoIP ISP and Organization
+	See test_city.py for example usage with GeoIP City
 
 License:
 
-Copyright (c) 2003 MaxMind.com.
+Copyright (c) 2003 MaxMind LLC
 
 All rights reserved.  This package is free software; it is licensed
 under the GPL.
