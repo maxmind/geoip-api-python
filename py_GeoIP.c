@@ -144,19 +144,50 @@ static PyObject * GeoIP_org_by_name_Py(PyObject *self, PyObject *args) {
   return Py_BuildValue("s", retval);
 }
 
+void GeoIP_SetItemString(PyObject *dict, const char * name, char * value) {
+	PyObject * nameObj;
+	PyObject * valueObj;
+	nameObj = Py_BuildValue("s",name);
+	valueObj = Py_BuildValue("s",value);
+	PyDict_SetItem(dict,nameObj,valueObj);
+	Py_DECREF(nameObj);
+	Py_DECREF(valueObj);
+}
+
+void GeoIP_SetItemFloat(PyObject *dict, const char * name, float value) {
+	PyObject * nameObj;
+	PyObject * valueObj;
+	nameObj = Py_BuildValue("s",name);
+	valueObj = Py_BuildValue("f",value);
+	PyDict_SetItem(dict,nameObj,valueObj);
+	Py_DECREF(nameObj);
+	Py_DECREF(valueObj);
+}
+
+void GeoIP_SetItemInt(PyObject *dict, const char * name, int value) {
+	PyObject * nameObj;
+	PyObject * valueObj;
+	nameObj = Py_BuildValue("s",name);
+	valueObj = Py_BuildValue("i",value);
+	PyDict_SetItem(dict,nameObj,valueObj);
+	Py_DECREF(nameObj);
+	Py_DECREF(valueObj);
+}
+
 static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	PyObject * retval;
 	retval = PyDict_New();
-	PyDict_SetItem(retval,Py_BuildValue("s","country_code"),Py_BuildValue("s",gir->country_code));
-	PyDict_SetItem(retval,Py_BuildValue("s","country_code3"),Py_BuildValue("s",gir->country_code3));
-	PyDict_SetItem(retval,Py_BuildValue("s","country_name"),Py_BuildValue("s",gir->country_name));
-	PyDict_SetItem(retval,Py_BuildValue("s","region"),Py_BuildValue("s",gir->region));
-	PyDict_SetItem(retval,Py_BuildValue("s","city"),Py_BuildValue("s",gir->city));
-	PyDict_SetItem(retval,Py_BuildValue("s","postal_code"),Py_BuildValue("s",gir->postal_code));
-	PyDict_SetItem(retval,Py_BuildValue("s","latitude"),Py_BuildValue("f",gir->latitude));
-	PyDict_SetItem(retval,Py_BuildValue("s","longitude"),Py_BuildValue("f",gir->longitude));
-	PyDict_SetItem(retval,Py_BuildValue("s","dma_code"),Py_BuildValue("i",gir->dma_code));
-	PyDict_SetItem(retval,Py_BuildValue("s","area_code"),Py_BuildValue("i",gir->area_code));
+	GeoIP_SetItemString(retval,"country_code",gir->country_code);
+	GeoIP_SetItemString(retval,"country_code3",gir->country_code3);
+	GeoIP_SetItemString(retval,"country_name",gir->country_name);
+	GeoIP_SetItemString(retval,"region",gir->region);
+	GeoIP_SetItemString(retval,"city",gir->city);
+	GeoIP_SetItemString(retval,"postal_code",gir->postal_code);
+	GeoIP_SetItemFloat(retval,"latitude",gir->latitude);
+	GeoIP_SetItemFloat(retval,"longitude",gir->longitude);
+	GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
+	GeoIP_SetItemInt(retval,"area_code",gir->area_code);
+	GeoIPRecord_delete(gir);
 	return retval;
 }
 
@@ -168,6 +199,23 @@ static PyObject * GeoIP_record_by_addr_Py(PyObject *self, PyObject *args) {
     return NULL;
   }
   gir = GeoIP_record_by_addr(GeoIP->gi, addr);
+	if (gir == NULL) {
+		return NULL;
+	}
+	return GeoIP_populate_dict(gir);
+}
+
+static PyObject * GeoIP_record_by_name_Py(PyObject *self, PyObject *args) {
+  char * name;
+  GeoIPRecord * gir;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  gir = GeoIP_record_by_name(GeoIP->gi, name);
+	if (gir == NULL) {
+		return NULL;
+	}
 	return GeoIP_populate_dict(gir);
 }
 
@@ -179,6 +227,7 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"org_by_addr", GeoIP_org_by_addr_Py, 1, "Lookup Organization or ISP By IP Address"},
   {"org_by_name", GeoIP_org_by_name_Py, 1, "Lookup Organization or ISP By Name"},
   {"record_by_addr", GeoIP_record_by_addr_Py, 1, "Lookup City Region By IP Address"},
+  {"record_by_name", GeoIP_record_by_name_Py, 1, "Lookup City Region By Name"},
   {NULL, NULL, 0, NULL}
 };
 
