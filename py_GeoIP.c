@@ -1,4 +1,4 @@
-* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 2; tab-width: 2 -*- */
+/* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 2; tab-width: 2 -*- */
 /* py_GeoIP.c
  *
  * Copyright (C) 2002 MaxMind.com
@@ -121,11 +121,35 @@ static PyObject * GeoIP_country_name_by_addr_Py(PyObject *self, PyObject *args) 
   return Py_BuildValue("s", retval);
 }
 
+static PyObject * GeoIP_org_by_addr_Py(PyObject *self, PyObject *args) {
+  char * name;
+  const char * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_org_by_addr(GeoIP->gi, name);
+  return Py_BuildValue("s", retval);
+}
+
+static PyObject * GeoIP_org_by_name_Py(PyObject *self, PyObject *args) {
+  char * name;
+  const char * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_org_by_name(GeoIP->gi, name);
+  return Py_BuildValue("s", retval);
+}
+
 static PyMethodDef GeoIP_Object_methods[] = {
   {"country_code_by_name", GeoIP_country_code_by_name_Py, 1, "Lookup Country Code By Name"},
   {"country_name_by_name", GeoIP_country_name_by_name_Py, 1, "Lookup Country Name By Name"},
-  {"country_code_by_addr", GeoIP_country_code_by_addr_Py, 1, "Lookup Country Address By Name"},
-  {"country_name_by_addr", GeoIP_country_name_by_addr_Py, 1, "Lookup Country Address By Name"},
+  {"country_code_by_addr", GeoIP_country_code_by_addr_Py, 1, "Lookup Country Code By IP Address"},
+  {"country_name_by_addr", GeoIP_country_name_by_addr_Py, 1, "Lookup Country Name By IP Address"},
+  {"org_by_addr", GeoIP_org_by_addr_Py, 1, "Lookup Organization or ISP By IP Address"},
+  {"org_by_name", GeoIP_org_by_name_Py, 1, "Lookup Organization or ISP By Name"},
   {NULL, NULL, 0, NULL}
 };
 
