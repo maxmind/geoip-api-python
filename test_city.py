@@ -11,4 +11,4 @@ print gir['country_code'] + '\t' + gir['country_code3'] + '\t' + gir['country_na
 print gir['latitude']
 print gir['longitude']
 print gir['dma_code']
-print gir['area_code'];
+print gir['area_code']
