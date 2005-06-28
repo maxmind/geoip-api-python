@@ -174,6 +174,15 @@ void GeoIP_SetItemInt(PyObject *dict, const char * name, int value) {
 	Py_DECREF(valueObj);
 }
 
+static PyObject * GeoIP_region_populate_dict(GeoIPRegion * gir) {
+  PyObject * retval;
+  retval = PyDict_New();
+  GeoIP_SetItemString(retval,"country_code",gir->country_code);
+  GeoIP_SetItemString(retval,"region",gir->region);
+  GeoIPRegion_delete(gir);
+  return retval;
+}
+
 static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	PyObject * retval;
 	retval = PyDict_New();
@@ -219,6 +228,28 @@ static PyObject * GeoIP_record_by_name_Py(PyObject *self, PyObject *args) {
 	return GeoIP_populate_dict(gir);
 }
 
+static PyObject * GeoIP_region_by_name_Py(PyObject *self, PyObject * args) {
+  char * name;
+  GeoIPRegion * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_region_by_name(GeoIP->gi, name);
+  return GeoIP_region_populate_dict(retval);
+}
+
+static PyObject * GeoIP_region_by_addr_Py(PyObject *self, PyObject * args) {
+  char * name;
+  GeoIPRegion * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_region_by_addr(GeoIP->gi, name);
+  return GeoIP_region_populate_dict(retval);
+}
+
 static PyMethodDef GeoIP_Object_methods[] = {
   {"country_code_by_name", GeoIP_country_code_by_name_Py, 1, "Lookup Country Code By Name"},
   {"country_name_by_name", GeoIP_country_name_by_name_Py, 1, "Lookup Country Name By Name"},
@@ -226,6 +257,8 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"country_name_by_addr", GeoIP_country_name_by_addr_Py, 1, "Lookup Country Name By IP Address"},
   {"org_by_addr", GeoIP_org_by_addr_Py, 1, "Lookup Organization or ISP By IP Address"},
   {"org_by_name", GeoIP_org_by_name_Py, 1, "Lookup Organization or ISP By Name"},
+  {"region_by_addr", GeoIP_region_by_addr_Py, 1, "Lookup Region By IP Address"},
+  {"region_by_name", GeoIP_region_by_name_Py, 1, "Lookup Region By Name"},
   {"record_by_addr", GeoIP_record_by_addr_Py, 1, "Lookup City Region By IP Address"},
   {"record_by_name", GeoIP_record_by_name_Py, 1, "Lookup City Region By Name"},
   {NULL, NULL, 0, NULL}
