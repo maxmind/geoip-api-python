@@ -10,10 +10,11 @@ Usage:
 	See test.py for example usage with GeoIP Country
 	See test_org.py for example usage with GeoIP ISP and Organization
 	See test_city.py for example usage with GeoIP City
+	See test_region.py for example usage with GeoIP Region
 
 License:
 
-Copyright (c) 2003 MaxMind LLC
+Copyright (c) 2005 MaxMind LLC
 
 All rights reserved.  This package is free software; it is licensed
 under the GPL.

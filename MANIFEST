@@ -5,3 +5,4 @@ setup.py
 test.py
 test_org.py
 test_city.py
+test_region.py
