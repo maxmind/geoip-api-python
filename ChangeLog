@@ -1,3 +1,5 @@
+	* Export the country list, country code -> country name mapping, and country->continent
+		mapping ( Ignacio Vazquez-Abrams )
 	* Changed license to LGPL from GPL
 
 1.2.1	2005-06-28

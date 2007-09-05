@@ -306,6 +306,28 @@ initGeoIP(void)
   m = Py_InitModule("GeoIP", GeoIP_Class_methods);
   d = PyModule_GetDict(m);
 
+  int total_ccodes = 251;
+
+  PyObject *ccode = PyTuple_New(total_ccodes);
+  PyObject *cname = PyDict_New();
+  PyObject *ccont = PyDict_New();
+  PyObject *s;
+
+  int i = 0;
+  for (; i<total_ccodes; i++)
+  {
+    s = PyString_FromString(GeoIP_country_code[i]);
+    PyTuple_SET_ITEM(ccode, i, s);
+    Py_INCREF(s);
+    PyDict_SetItem(cname, s, PyString_FromString(GeoIP_country_name[i]));
+    Py_INCREF(s);
+    PyDict_SetItem(ccont, s, PyString_FromString(GeoIP_country_continent[i]));
+  };
+
+  PyDict_SetItemString(d, "country_codes", ccode);
+  PyDict_SetItemString(d, "country_names", cname);
+  PyDict_SetItemString(d, "country_continents", ccont);
+
   tmp = PyInt_FromLong(0);
   PyDict_SetItemString(d, "GEOIP_STANDARD", tmp);
   Py_DECREF(tmp);
