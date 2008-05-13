@@ -24,6 +24,9 @@
 
 staticforward PyTypeObject GeoIP_GeoIPType;
 
+/* Exception object for python */
+static PyObject *PyGeoIPError;
+
 typedef struct {
   PyObject_HEAD;
   GeoIP *gi;
@@ -43,6 +46,7 @@ GeoIP_new_Py(PyObject* self, PyObject *args) {
   GeoIP->gi = GeoIP_new(flags);
 
   if (!GeoIP->gi) {
+    PyErr_SetString(PyGeoIPError,  "Can't create GeoIP->gi object");
     return NULL;
   }
 
@@ -64,6 +68,7 @@ GeoIP_open_Py(PyObject* self, PyObject *args) {
   GeoIP->gi = GeoIP_open(filename, flags);
 
   if (!GeoIP->gi) {
+    PyErr_SetString(PyGeoIPError,  "Can't create GeoIP->gi object");
     return NULL;
   }
 
@@ -209,7 +214,8 @@ static PyObject * GeoIP_record_by_addr_Py(PyObject *self, PyObject *args) {
   }
   gir = GeoIP_record_by_addr(GeoIP->gi, addr);
 	if (gir == NULL) {
-		return NULL;
+		Py_INCREF(Py_None);
+		return Py_None;
 	}
 	return GeoIP_populate_dict(gir);
 }
@@ -223,7 +229,8 @@ static PyObject * GeoIP_record_by_name_Py(PyObject *self, PyObject *args) {
   }
   gir = GeoIP_record_by_name(GeoIP->gi, name);
 	if (gir == NULL) {
-		return NULL;
+		Py_INCREF(Py_None);
+		return Py_None;
 	}
 	return GeoIP_populate_dict(gir);
 }
@@ -305,6 +312,9 @@ initGeoIP(void)
 
   m = Py_InitModule("GeoIP", GeoIP_Class_methods);
   d = PyModule_GetDict(m);
+
+  PyGeoIPError = PyErr_NewException("py_geoip.error", NULL, NULL);
+  PyDict_SetItemString(d, "error", PyGeoIPError);
 
   int total_ccodes = 251;
 

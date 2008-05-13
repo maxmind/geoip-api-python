@@ -1,3 +1,6 @@
+	!! record_by_addr and record_by_name return None instead of throwing a
+exception. See test_city.py ( Boris Zentner ) 
+	* Add a py_geoip.error Exception object. (Boris Zentner)
 	* Export the country list, country code -> country name mapping, and country->continent
 		mapping ( Ignacio Vazquez-Abrams )
 	* Changed license to LGPL from GPL
