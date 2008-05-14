@@ -1,3 +1,4 @@
+	* Raise country code counter from 251 to 253 ( Boris Zentner )
 	!! record_by_addr and record_by_name return None instead of throwing a
 exception. See test_city.py ( Boris Zentner ) 
 	* Add a py_geoip.error Exception object. (Boris Zentner)

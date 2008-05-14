@@ -316,7 +316,7 @@ initGeoIP(void)
   PyGeoIPError = PyErr_NewException("py_geoip.error", NULL, NULL);
   PyDict_SetItemString(d, "error", PyGeoIPError);
 
-  int total_ccodes = 251;
+  int total_ccodes = 253;
 
   PyObject *ccode = PyTuple_New(total_ccodes);
   PyObject *cname = PyDict_New();
