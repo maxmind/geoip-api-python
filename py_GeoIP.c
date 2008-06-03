@@ -149,7 +149,7 @@ static PyObject * GeoIP_org_by_name_Py(PyObject *self, PyObject *args) {
   return Py_BuildValue("s", retval);
 }
 
-void GeoIP_SetItemString(PyObject *dict, const char * name, char * value) {
+void GeoIP_SetItemString(PyObject *dict, const char * name, const char * value) {
 	PyObject * nameObj;
 	PyObject * valueObj;
 	nameObj = Py_BuildValue("s",name);
@@ -201,6 +201,10 @@ static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	GeoIP_SetItemFloat(retval,"longitude",gir->longitude);
 	GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
 	GeoIP_SetItemInt(retval,"area_code",gir->area_code);
+  GeoIP_SetItemString(retval, "region_name",
+      GeoIP_region_name_by_code(gir->country_code, gir->region));
+  GeoIP_SetItemString(retval, "time_zone",
+      GeoIP_time_zone_by_country_and_region(gir->country_code, gir->region));
 	GeoIPRecord_delete(gir);
 	return retval;
 }
@@ -274,9 +278,15 @@ static PyMethodDef GeoIP_Object_methods[] = {
 static PyObject *
 GeoIP_GetAttr(PyObject *self, char *attrname)
 {
+	GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
   if (strcmp(attrname, "GEOIP_STANDARD") == 0) {
     return Py_BuildValue("i", 0);
-  }
+  } else if (strcmp(attrname, "database_info") == 0) {
+    return Py_BuildValue("z", GeoIP_database_info(GeoIP->gi));
+  } else if (strcmp(attrname, "database_edition") == 0) {
+    return Py_BuildValue("z", GeoIPDBDescription[
+        GeoIP_database_edition(GeoIP->gi)]);
+	}
   return Py_FindMethod(GeoIP_Object_methods, self, attrname);
 }
 
@@ -307,7 +317,10 @@ static PyMethodDef GeoIP_Class_methods[] = {
 DL_EXPORT(void)
 initGeoIP(void) 
 {
-  PyObject *m, *d, *tmp;
+  PyObject *m, *d, *tmp, *ccode, *cname, *ccont, *name;
+  int i;
+  const int total_ccodes = sizeof (GeoIP_country_code) /
+    sizeof (GeoIP_country_code[0]);
   GeoIP_GeoIPType.ob_type = &PyType_Type;
 
   m = Py_InitModule("GeoIP", GeoIP_Class_methods);
@@ -316,33 +329,44 @@ initGeoIP(void)
   PyGeoIPError = PyErr_NewException("py_geoip.error", NULL, NULL);
   PyDict_SetItemString(d, "error", PyGeoIPError);
 
-  int total_ccodes = 253;
+  ccode = PyTuple_New(total_ccodes);
+  cname = PyDict_New();
+  ccont = PyDict_New();
 
-  PyObject *ccode = PyTuple_New(total_ccodes);
-  PyObject *cname = PyDict_New();
-  PyObject *ccont = PyDict_New();
-  PyObject *s;
-
-  int i = 0;
-  for (; i<total_ccodes; i++)
+  for (i = 0; i<total_ccodes; i++)
   {
-    s = PyString_FromString(GeoIP_country_code[i]);
-    PyTuple_SET_ITEM(ccode, i, s);
-    Py_INCREF(s);
-    PyDict_SetItem(cname, s, PyString_FromString(GeoIP_country_name[i]));
-    Py_INCREF(s);
-    PyDict_SetItem(ccont, s, PyString_FromString(GeoIP_country_continent[i]));
-  };
+    name = PyString_FromString(GeoIP_country_code[i]);
+    PyTuple_SET_ITEM(ccode, i, name);
+
+    tmp = PyString_FromString(GeoIP_country_name[i]);
+    PyDict_SetItem(cname, name, tmp);
+    Py_DECREF(tmp);
+
+    tmp = PyString_FromString(GeoIP_country_continent[i]);
+    PyDict_SetItem(ccont, name, tmp);
+    Py_DECREF(tmp);
+  }
 
   PyDict_SetItemString(d, "country_codes", ccode);
+  Py_DECREF(ccode);
   PyDict_SetItemString(d, "country_names", cname);
+  Py_DECREF(cname);
   PyDict_SetItemString(d, "country_continents", ccont);
+  Py_DECREF(ccont);
 
-  tmp = PyInt_FromLong(0);
+  tmp = PyInt_FromLong(GEOIP_STANDARD);
   PyDict_SetItemString(d, "GEOIP_STANDARD", tmp);
   Py_DECREF(tmp);
 
-  tmp = PyInt_FromLong(1);
+  tmp = PyInt_FromLong(GEOIP_MEMORY_CACHE);
   PyDict_SetItemString(d, "GEOIP_MEMORY_CACHE", tmp);
+  Py_DECREF(tmp);
+
+  tmp = PyInt_FromLong(GEOIP_CHECK_CACHE);
+  PyDict_SetItemString(d, "GEOIP_CHECK_CACHE", tmp);
+  Py_DECREF(tmp);
+
+  tmp = PyInt_FromLong(GEOIP_INDEX_CACHE);
+  PyDict_SetItemString(d, "GEOIP_INDEX_CACHE", tmp);
   Py_DECREF(tmp);
 }

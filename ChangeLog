@@ -1,3 +1,9 @@
+	* Add database_info and database_edition attributes to GeoIP object
+		(James Henstridge)
+	* Add region_name and time_zone keys to GeoIPRecord wrapper (James
+		Henstridge).
+	* Export the country list, country code -> country name mapping, and
+		country->continent mapping ( Ignacio Vazquez-Abrams )
 	* Raise country code counter from 251 to 253 ( Boris Zentner )
 	!! record_by_addr and record_by_name return None instead of throwing a
 exception. See test_city.py ( Boris Zentner ) 
