@@ -12,6 +12,12 @@ Usage:
 	See test_city.py for example usage with GeoIP City
 	See test_region.py for example usage with GeoIP Region
 
+Troubleshooting:
+
+If you get a "libGeoIP.so.1: cannot open shared object  No such file or
+directory" error, add /usr/local/lib to /etc/ld.so.conf then run
+/sbin/ldconfig /etc/ld.so.conf
+
 License:
 
 Copyright (c) 2007 MaxMind LLC
