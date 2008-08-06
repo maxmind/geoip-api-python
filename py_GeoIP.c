@@ -181,9 +181,14 @@ void GeoIP_SetItemInt(PyObject *dict, const char * name, int value) {
 
 static PyObject * GeoIP_region_populate_dict(GeoIPRegion * gir) {
   PyObject * retval;
+  const char * region_name = NULL;
   retval = PyDict_New();
   GeoIP_SetItemString(retval,"country_code",gir->country_code);
   GeoIP_SetItemString(retval,"region",gir->region);
+  if ( gir->country_code[0] ) {
+    region_name = GeoIP_region_name_by_code(gir->country_code, gir->region);
+  }
+  GeoIP_SetItemString(retval,"region_name",region_name);
   GeoIPRegion_delete(gir);
   return retval;
 }
@@ -201,10 +206,10 @@ static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	GeoIP_SetItemFloat(retval,"longitude",gir->longitude);
 	GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
 	GeoIP_SetItemInt(retval,"area_code",gir->area_code);
-  GeoIP_SetItemString(retval, "region_name",
-      GeoIP_region_name_by_code(gir->country_code, gir->region));
-  GeoIP_SetItemString(retval, "time_zone",
-      GeoIP_time_zone_by_country_and_region(gir->country_code, gir->region));
+	GeoIP_SetItemString(retval, "region_name",
+	  GeoIP_region_name_by_code(gir->country_code, gir->region));
+	GeoIP_SetItemString(retval, "time_zone",
+	  GeoIP_time_zone_by_country_and_region(gir->country_code, gir->region));
 	GeoIPRecord_delete(gir);
 	return retval;
 }
