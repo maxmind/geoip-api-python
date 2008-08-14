@@ -1,3 +1,4 @@
+1.2.2	2008-08-13
 	* Update test_city.py and test_region.py ( Boris Zentner )
 	* Add region_name to GeoIPRegion ( Boris Zentner )
 	* Add database_info and database_edition attributes to GeoIP object
