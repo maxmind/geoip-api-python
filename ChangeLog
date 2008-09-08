@@ -1,3 +1,5 @@
+1.2.3	2008-09-08
+	* Add metro_code as a alias for dma_code ( Boris Zentner )
 1.2.2	2008-08-13
 	* Update test_city.py and test_region.py ( Boris Zentner )
 	* Add region_name to GeoIPRegion ( Boris Zentner )

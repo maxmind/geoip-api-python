@@ -204,7 +204,11 @@ static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	GeoIP_SetItemString(retval,"postal_code",gir->postal_code);
 	GeoIP_SetItemFloat(retval,"latitude",gir->latitude);
 	GeoIP_SetItemFloat(retval,"longitude",gir->longitude);
+	/* metro_code is a alias for dma_code.
+	 * we use dma_code here since older libraries support only 
+	 * the dma_code field */
 	GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
+	GeoIP_SetItemInt(retval,"metro_code",gir->dma_code);
 	GeoIP_SetItemInt(retval,"area_code",gir->area_code);
 	GeoIP_SetItemString(retval, "region_name",
 	  GeoIP_region_name_by_code(gir->country_code, gir->region));

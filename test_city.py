@@ -20,3 +20,4 @@ if gir != None:
 	print gir['dma_code']
 	print gir['area_code']
 	print gir['time_zone']
+	print gir['metro_code']
