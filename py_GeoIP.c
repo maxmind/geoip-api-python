@@ -270,6 +270,27 @@ static PyObject * GeoIP_region_by_addr_Py(PyObject *self, PyObject * args) {
   return GeoIP_region_populate_dict(retval);
 }
 
+static PyObject * GeoIP_range_by_ip_Py(PyObject *self, PyObject *args) {
+  char * name;
+  char ** start_stop_ptr;
+  PyObject * retval;
+
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  start_stop_ptr = GeoIP_range_by_ip(GeoIP->gi, name);
+  if ( !start_stop_ptr ) {
+    return NULL;
+  }
+
+  retval = Py_BuildValue("ss", start_stop_ptr[0], start_stop_ptr[1]);
+  free(start_stop_ptr[0]);
+  free(start_stop_ptr[1]);
+  free(start_stop_ptr);
+  return retval;
+}
+
 static PyMethodDef GeoIP_Object_methods[] = {
   {"country_code_by_name", GeoIP_country_code_by_name_Py, 1, "Lookup Country Code By Name"},
   {"country_name_by_name", GeoIP_country_name_by_name_Py, 1, "Lookup Country Name By Name"},
@@ -281,6 +302,7 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"region_by_name", GeoIP_region_by_name_Py, 1, "Lookup Region By Name"},
   {"record_by_addr", GeoIP_record_by_addr_Py, 1, "Lookup City Region By IP Address"},
   {"record_by_name", GeoIP_record_by_name_Py, 1, "Lookup City Region By Name"},
+  {"range_by_ip", GeoIP_range_by_ip_Py, 1, "Lookup start and end IP's for a given IP"},
   {NULL, NULL, 0, NULL}
 };
 

@@ -1,4 +1,7 @@
-1.2.3	2008-09-08
+	* update test.py - replace www.government.de with www.bundestag.de.
+		Add range_by_ip example. ( Boris Zentner )
+	* Add range_by_ip - returns largest start and stop ip for any ip.
+		Remember to use a IP not a name ( Boris Zentner )
 	* Add metro_code as a alias for dma_code ( Boris Zentner )
 1.2.2	2008-08-13
 	* Update test_city.py and test_region.py ( Boris Zentner )
