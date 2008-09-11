@@ -17,7 +17,7 @@ if gir != None:
 	print gir['postal_code']
 	print gir['latitude']
 	print gir['longitude']
-	print gir['dma_code']
+	print gir['metro_code']
 	print gir['area_code']
 	print gir['time_zone']
 	print gir['metro_code']
