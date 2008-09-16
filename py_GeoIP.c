@@ -204,10 +204,9 @@ static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	GeoIP_SetItemString(retval,"postal_code",gir->postal_code);
 	GeoIP_SetItemFloat(retval,"latitude",gir->latitude);
 	GeoIP_SetItemFloat(retval,"longitude",gir->longitude);
-	/* metro_code is a alias for dma_code.
-	 * we use dma_code here since older libraries support only 
-	 * the dma_code field */
 	GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
+	/* we did __NOT__ use gir->metro_code here, since metro_code is
+	 * somewhat new */
 	GeoIP_SetItemInt(retval,"metro_code",gir->dma_code);
 	GeoIP_SetItemInt(retval,"area_code",gir->area_code);
 	GeoIP_SetItemString(retval, "region_name",
@@ -285,9 +284,16 @@ static PyObject * GeoIP_range_by_ip_Py(PyObject *self, PyObject *args) {
   }
 
   retval = Py_BuildValue("ss", start_stop_ptr[0], start_stop_ptr[1]);
-  free(start_stop_ptr[0]);
-  free(start_stop_ptr[1]);
-  free(start_stop_ptr);
+  
+  /* relplace this code with GeoIP_range_by_ip_delete in the next version 
+   * otherwise the users need 1.4.5 instead of 1.4.4 */
+  if ( retval ) {
+    if ( start_stop_ptr[0] )
+      free(start_stop_ptr[0]);
+    if ( start_stop_ptr[1] )
+      free(start_stop_ptr[1]);
+    free(start_stop_ptr);
+  }
   return retval;
 }
 
