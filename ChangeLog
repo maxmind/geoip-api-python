@@ -1,3 +1,4 @@
+	* fix small memoryleak in database_info, org_by_name and org_by_addr (	Boris Zentner )
 1.2.3	2008-09-11
 	* update test.py - replace www.government.de with www.bundestag.de.
 		Add range_by_ip example. ( Boris Zentner )

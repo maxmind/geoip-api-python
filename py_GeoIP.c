@@ -128,25 +128,31 @@ static PyObject * GeoIP_country_name_by_addr_Py(PyObject *self, PyObject *args) 
 }
 
 static PyObject * GeoIP_org_by_addr_Py(PyObject *self, PyObject *args) {
-  char * name;
-  const char * retval;
+  char       * name;
+  const char * org;
+  PyObject   * ret;
   GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
   if (!PyArg_ParseTuple(args, "s", &name)) {
     return NULL;
   }
-  retval = GeoIP_org_by_addr(GeoIP->gi, name);
-  return Py_BuildValue("s", retval);
+  org = GeoIP_org_by_addr(GeoIP->gi, name);
+  ret = Py_BuildValue("s", org);
+  free(org);
+  return ret;
 }
 
 static PyObject * GeoIP_org_by_name_Py(PyObject *self, PyObject *args) {
-  char * name;
-  const char * retval;
+  char       * name;
+  const char * org;
+  PyObject   * ret;
   GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
   if (!PyArg_ParseTuple(args, "s", &name)) {
     return NULL;
   }
-  retval = GeoIP_org_by_name(GeoIP->gi, name);
-  return Py_BuildValue("s", retval);
+  org = GeoIP_org_by_name(GeoIP->gi, name);
+  ret = Py_BuildValue("s", org);
+  free(org);
+  return ret;
 }
 
 void GeoIP_SetItemString(PyObject *dict, const char * name, const char * value) {
@@ -315,14 +321,18 @@ static PyMethodDef GeoIP_Object_methods[] = {
 static PyObject *
 GeoIP_GetAttr(PyObject *self, char *attrname)
 {
-	GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  PyObject * ret;
+  char * database_info;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
   if (strcmp(attrname, "GEOIP_STANDARD") == 0) {
     return Py_BuildValue("i", 0);
   } else if (strcmp(attrname, "database_info") == 0) {
-    return Py_BuildValue("z", GeoIP_database_info(GeoIP->gi));
+    database_info = GeoIP_database_info(GeoIP->gi);
+    ret = Py_BuildValue("z", database_info);
+    free(database_info);
+    return ret;
   } else if (strcmp(attrname, "database_edition") == 0) {
-    return Py_BuildValue("z", GeoIPDBDescription[
-        GeoIP_database_edition(GeoIP->gi)]);
+    return Py_BuildValue("z", GeoIPDBDescription[GeoIP_database_edition(GeoIP->gi)]);
 	}
   return Py_FindMethod(GeoIP_Object_methods, self, attrname);
 }
