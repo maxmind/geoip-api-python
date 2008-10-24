@@ -1,10 +1,13 @@
+1.2.4	
 	* fix small memoryleak in database_info, org_by_name and org_by_addr (	Boris Zentner )
+	* fix version number in setup.py ( Boris Zentner )
+	* remove dma_code from test_city.py example ( Boris Zentner )
 1.2.3	2008-09-11
 	* update test.py - replace www.government.de with www.bundestag.de.
 		Add range_by_ip example. ( Boris Zentner )
 	* Add range_by_ip - returns largest start and stop ip for any ip.
 		Remember to use a IP not a name ( Boris Zentner )
-	* Add metro_code as a alias for dma_code ( Boris Zentner )
+	* Add metro_code as a alias for the depreciated dma_code ( Boris Zentner )
 1.2.2	2008-08-13
 	* Update test_city.py and test_region.py ( Boris Zentner )
 	* Add region_name to GeoIPRegion ( Boris Zentner )

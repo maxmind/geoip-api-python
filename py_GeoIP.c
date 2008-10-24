@@ -210,6 +210,11 @@ static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	GeoIP_SetItemString(retval,"postal_code",gir->postal_code);
 	GeoIP_SetItemFloat(retval,"latitude",gir->latitude);
 	GeoIP_SetItemFloat(retval,"longitude",gir->longitude);
+	/*
+	 * metro_code is a alias for the depreciated dma_code.
+	 * we use the depreciated gir->dma_code since the CAPI
+	 * wrapper might be outdated and does not supply metro_code
+	 */
 	GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
 	/* we did __NOT__ use gir->metro_code here, since metro_code is
 	 * somewhat new */
