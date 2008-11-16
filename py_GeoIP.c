@@ -129,7 +129,7 @@ static PyObject * GeoIP_country_name_by_addr_Py(PyObject *self, PyObject *args) 
 
 static PyObject * GeoIP_org_by_addr_Py(PyObject *self, PyObject *args) {
   char       * name;
-  const char * org;
+  char * org;
   PyObject   * ret;
   GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
   if (!PyArg_ParseTuple(args, "s", &name)) {
@@ -143,7 +143,7 @@ static PyObject * GeoIP_org_by_addr_Py(PyObject *self, PyObject *args) {
 
 static PyObject * GeoIP_org_by_name_Py(PyObject *self, PyObject *args) {
   char       * name;
-  const char * org;
+  char * org;
   PyObject   * ret;
   GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
   if (!PyArg_ParseTuple(args, "s", &name)) {
@@ -308,6 +308,26 @@ static PyObject * GeoIP_range_by_ip_Py(PyObject *self, PyObject *args) {
   return retval;
 }
 
+static PyObject * GeoIP_charset_Py(PyObject *self, PyObject * args) {
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  return Py_BuildValue("i", GeoIP_charset(GeoIP->gi) );
+}
+
+static PyObject * GeoIP_set_charset_Py(PyObject *self, PyObject * args) {
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  int charset;
+  if (!PyArg_ParseTuple(args, "i", &charset)) {
+    return NULL;
+  }
+  return Py_BuildValue("i", GeoIP_set_charset(GeoIP->gi, charset));
+
+}
+	
+static PyObject * GeoIP_last_netmask_Py(PyObject *self, PyObject * args) {
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  return Py_BuildValue("i", GeoIP_last_netmask(GeoIP->gi) );
+}
+
 static PyMethodDef GeoIP_Object_methods[] = {
   {"country_code_by_name", GeoIP_country_code_by_name_Py, 1, "Lookup Country Code By Name"},
   {"country_name_by_name", GeoIP_country_name_by_name_Py, 1, "Lookup Country Name By Name"},
@@ -320,6 +340,9 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"record_by_addr", GeoIP_record_by_addr_Py, 1, "Lookup City Region By IP Address"},
   {"record_by_name", GeoIP_record_by_name_Py, 1, "Lookup City Region By Name"},
   {"range_by_ip", GeoIP_range_by_ip_Py, 1, "Lookup start and end IP's for a given IP"},
+  {"charset", GeoIP_charset_Py, 1, "Return the current charset ( either GEOIP_CHARSET_ISO_8859_1 or GEOIP_CHARSET_UTF8 )"},
+  {"set_charset", GeoIP_set_charset_Py, 1, "Set the charset for city records"},
+  {"last_netmask", GeoIP_last_netmask_Py, 1, "return the netmask depth of the last lookup"},
   {NULL, NULL, 0, NULL}
 };
 
@@ -421,4 +444,13 @@ initGeoIP(void)
   tmp = PyInt_FromLong(GEOIP_INDEX_CACHE);
   PyDict_SetItemString(d, "GEOIP_INDEX_CACHE", tmp);
   Py_DECREF(tmp);
+
+  tmp = PyInt_FromLong(GEOIP_CHARSET_ISO_8859_1);
+  PyDict_SetItemString(d, "GEOIP_CHARSET_ISO_8859_1", tmp);
+  Py_DECREF(tmp);
+
+  tmp = PyInt_FromLong(GEOIP_CHARSET_UTF8);
+  PyDict_SetItemString(d, "GEOIP_CHARSET_UTF8", tmp);
+  Py_DECREF(tmp);
+
 }
