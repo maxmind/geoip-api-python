@@ -1,12 +1,11 @@
-
-	* Add charset and set_charset methods , as well as 
+1.2.4	2008-12-16
+	* Add charset and set_charset methods, as well as 
 		the new attributes GeoIP.GEOIP_CHARSET_ISO_8859_1 and
 		GeoIP.GEOIP_CHARSET_UTF8 ( Boris Zentner )
 	* Add test_city_charset.py script showing howto use
 		charset and set_charset ( Boris Zentner )
 	* Add last_netmask ( Boris Zentner )
 	* Fix compile warnings ( Boris Zentner )
-1.2.4	
 	* fix small memoryleak in database_info, org_by_name and org_by_addr (	Boris Zentner )
 	* fix version number in setup.py ( Boris Zentner )
 	* remove dma_code from test_city.py example ( Boris Zentner )

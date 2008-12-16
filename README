@@ -1,6 +1,6 @@
 Requirements:
 	Python 2.0 or greater
-	GeoIP C Library 1.4.4 or greater
+	GeoIP C Library 1.4.5 or greater
 
 To Install:
 	python setup.py build
