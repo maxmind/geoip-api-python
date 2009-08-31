@@ -1,3 +1,8 @@
+	* Add IPv6 glue *** needs libGeoIP 1.4.7 ***
+		country_code_by_name_v6	
+		country_name_by_name_v6
+		country_code_by_addr_v6
+		country_name_by_addr_v6 ( Boris Zentner )
 1.2.4	2008-12-16
 	* Add charset and set_charset methods, as well as 
 		the new attributes GeoIP.GEOIP_CHARSET_ISO_8859_1 and

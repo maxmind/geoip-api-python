@@ -4,7 +4,7 @@ import GeoIP
 
 #gi = GeoIP.new(GeoIP.GEOIP_STANDARD)
 gi = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
-#gi = GeoIP.open("/usr/local/share/GeoIP/GeoIP.data",GeoIP.GEOIP_STANDARD)
+#gi = GeoIP.open("/usr/local/share/GeoIP/GeoIP.dat",GeoIP.GEOIP_STANDARD)
 
 print gi.country_code_by_name("yahoo.com")
 print gi.last_netmask()

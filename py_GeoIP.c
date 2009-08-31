@@ -83,6 +83,50 @@ GeoIP_GeoIP_dealloc(PyObject* self)
   PyObject_Del(self);
 }
 
+static PyObject * GeoIP_country_code_by_name_v6_Py(PyObject *self, PyObject *args) {
+  char * name;
+  const char * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_country_code_by_name_v6(GeoIP->gi, name);
+  return Py_BuildValue("s", retval);
+}
+
+static PyObject * GeoIP_country_name_by_name_v6_Py(PyObject *self, PyObject *args) {
+  char * name;
+  const char * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_country_name_by_name_v6(GeoIP->gi, name);
+  return Py_BuildValue("s", retval);
+}
+
+static PyObject * GeoIP_country_code_by_addr_v6_Py(PyObject *self, PyObject *args) {
+  char * name;
+  const char * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_country_code_by_addr_v6(GeoIP->gi, name);
+  return Py_BuildValue("s", retval);
+}
+
+static PyObject * GeoIP_country_name_by_addr_v6_Py(PyObject *self, PyObject *args) {
+  char * name;
+  const char * retval;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  retval = GeoIP_country_name_by_addr_v6(GeoIP->gi, name);
+  return Py_BuildValue("s", retval);
+}
+
 static PyObject * GeoIP_country_code_by_name_Py(PyObject *self, PyObject *args) {
   char * name;
   const char * retval;
@@ -343,6 +387,10 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"charset", GeoIP_charset_Py, 1, "Return the current charset ( either GEOIP_CHARSET_ISO_8859_1 or GEOIP_CHARSET_UTF8 )"},
   {"set_charset", GeoIP_set_charset_Py, 1, "Set the charset for city records"},
   {"last_netmask", GeoIP_last_netmask_Py, 1, "return the netmask depth of the last lookup"},
+  {"country_code_by_name_v6", GeoIP_country_code_by_name_v6_Py, 1, "Lookup IPv6 Country Code By Name"},
+  {"country_name_by_name_v6", GeoIP_country_name_by_name_v6_Py, 1, "Lookup IPv6 Country Name By Name"},
+  {"country_code_by_addr_v6", GeoIP_country_code_by_addr_v6_Py, 1, "Lookup IPv6 Country Code By IP Address"},
+  {"country_name_by_addr_v6", GeoIP_country_name_by_addr_v6_Py, 1, "Lookup IPv6 Country Name By IP Address"},
   {NULL, NULL, 0, NULL}
 };
 
