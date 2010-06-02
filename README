@@ -1,6 +1,6 @@
 Requirements:
 	Python 2.0 or greater
-	GeoIP C Library 1.4.5 or greater
+	GeoIP C Library 1.4.7 or greater
 
 To Install:
 	python setup.py build
@@ -11,6 +11,9 @@ Usage:
 	See test_org.py for example usage with GeoIP ISP and Organization
 	See test_city.py for example usage with GeoIP City
 	See test_region.py for example usage with GeoIP Region
+	See test_netspeed.py for example usage with GeoIP Netspeed
+	See test_v6.py for example usage with GeoIP v6 Country Database
+	See test_city_acc.py for example usage with GeoIP Confidence and Accuracy Database
 
 Troubleshooting:
 
@@ -20,7 +23,7 @@ directory" error, add /usr/local/lib to /etc/ld.so.conf then run
 
 License:
 
-Copyright (c) 2008 MaxMind LLC
+Copyright (c) 2010 MaxMind LLC
 
 All rights reserved.  This package is free software; it is licensed
 under the LGPL.

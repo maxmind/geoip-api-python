@@ -1,3 +1,7 @@
+	* Add support for Confidence and Accuracy Database.
+	* Add support for Netspeed Database. via:
+		id_by_addr
+		id_by_name
 	* Add IPv6 glue *** needs libGeoIP 1.4.7 ***
 		country_code_by_name_v6	
 		country_name_by_name_v6
