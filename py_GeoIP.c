@@ -291,7 +291,7 @@ static PyObject * GeoIP_region_populate_dict(GeoIPRegion * gir) {
   return retval;
 }
 
-static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
+static PyObject * GeoIP_populate_dict(GeoIP* gi, GeoIPRecord *gir) {
 	PyObject * retval;
 	retval = PyDict_New();
 	GeoIP_SetItemString(retval,"country_code",gir->country_code);
@@ -300,29 +300,38 @@ static PyObject * GeoIP_populate_dict(GeoIPRecord *gir) {
 	GeoIP_SetItemString(retval,"region",gir->region);
 	GeoIP_SetItemString(retval,"city",gir->city);
 	GeoIP_SetItemString(retval,"postal_code",gir->postal_code);
-	GeoIP_SetItemFloat(retval,"latitude",gir->latitude);
-	GeoIP_SetItemFloat(retval,"longitude",gir->longitude);
-	/*
-	 * metro_code is a alias for the depreciated dma_code.
-	 * we use the depreciated gir->dma_code since the CAPI
-	 * wrapper might be outdated and does not supply metro_code
-	 */
-	GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
-	/* we did __NOT__ use gir->metro_code here, since metro_code is
-	 * somewhat new */
-	GeoIP_SetItemInt(retval,"metro_code",gir->dma_code);
-	GeoIP_SetItemInt(retval,"area_code",gir->area_code);
+	GeoIP_SetItemFloat(retval,"latitude", gir->latitude);
+	GeoIP_SetItemFloat(retval,"longitude", gir->longitude);
 	GeoIP_SetItemString(retval, "region_name",
 	  GeoIP_region_name_by_code(gir->country_code, gir->region));
 	GeoIP_SetItemString(retval, "time_zone",
 	  GeoIP_time_zone_by_country_and_region(gir->country_code, gir->region));
+        if ( gi->databaseType != GEOIP_CITY_EDITION_REV0 ){
+	  /*
+	   * metro_code is a alias for the depreciated dma_code.
+	   * we use the depreciated gir->dma_code since the CAPI
+	   * wrapper might be outdated and does not supply metro_code
+	   */
+	  GeoIP_SetItemInt(retval,"dma_code",gir->dma_code);
+	  /* we did __NOT__ use gir->metro_code here, since metro_code is
+	   * somewhat new */
+	  GeoIP_SetItemInt(retval,"metro_code",gir->dma_code);
+	  GeoIP_SetItemInt(retval,"area_code",gir->area_code);
+        }
 
+/*
+ * drop support for Confidence and Accuracy Database
+ * for now
+
+        if ( gi->databaseType != GEOIP_CITY_EDITION_REV1 ){
         GeoIP_SetConfItemInt(retval, "country_conf", gir->country_conf );
         GeoIP_SetConfItemInt(retval, "region_conf",  gir->region_conf );
         GeoIP_SetConfItemInt(retval, "city_conf",    gir->city_conf );
         GeoIP_SetConfItemInt(retval, "postal_conf",  gir->postal_conf );
 
         GeoIP_SetAccuracyItemInt(retval, "accuracy_radius", gir->accuracy_radius );
+
+*/
 
 	GeoIPRecord_delete(gir);
 	return retval;
@@ -340,7 +349,7 @@ static PyObject * GeoIP_record_by_addr_Py(PyObject *self, PyObject *args) {
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
-	return GeoIP_populate_dict(gir);
+	return GeoIP_populate_dict(GeoIP->gi, gir);
 }
 
 static PyObject * GeoIP_record_by_name_Py(PyObject *self, PyObject *args) {
@@ -355,7 +364,7 @@ static PyObject * GeoIP_record_by_name_Py(PyObject *self, PyObject *args) {
 		Py_INCREF(Py_None);
 		return Py_None;
 	}
-	return GeoIP_populate_dict(gir);
+	return GeoIP_populate_dict(GeoIP->gi, gir);
 }
 
 static PyObject * GeoIP_region_by_name_Py(PyObject *self, PyObject * args) {
@@ -428,6 +437,36 @@ static PyObject * GeoIP_last_netmask_Py(PyObject *self, PyObject * args) {
   return Py_BuildValue("i", GeoIP_last_netmask(GeoIP->gi) );
 }
 
+
+static PyObject * GeoIP_teredo_Py(PyObject *self, PyObject * args) {
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  return Py_BuildValue("i", GeoIP_teredo(GeoIP->gi) );
+}
+
+static PyObject * GeoIP_enable_teredo_Py(PyObject *self, PyObject * args) {
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  int teredo;
+  if (!PyArg_ParseTuple(args, "i", &teredo)) {
+    return NULL;
+  }
+  return Py_BuildValue("i", GeoIP_enable_teredo(GeoIP->gi, teredo));
+}
+
+static PyObject*
+GeoIP_lib_version_Py(PyObject* self, PyObject *args) {
+  return Py_BuildValue("s", GeoIP_lib_version());
+}
+
+static PyObject * GeoIP_time_zone_by_country_and_region_Py(PyObject *self, PyObject * args) {
+  char * country_code, *region;
+  if (!PyArg_ParseTuple(args, "ss", &country_code, &region)) {
+    return NULL;
+  }
+  return Py_BuildValue("s",  GeoIP_time_zone_by_country_and_region(country_code, region));
+}
+
+
+
 static PyMethodDef GeoIP_Object_methods[] = {
   {"country_code_by_name", GeoIP_country_code_by_name_Py, 1, "Lookup Country Code By Name"},
   {"country_name_by_name", GeoIP_country_name_by_name_Py, 1, "Lookup Country Name By Name"},
@@ -442,11 +481,13 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"range_by_ip", GeoIP_range_by_ip_Py, 1, "Lookup start and end IP's for a given IP"},
   {"charset", GeoIP_charset_Py, 1, "Return the current charset ( either GEOIP_CHARSET_ISO_8859_1 or GEOIP_CHARSET_UTF8 )"},
   {"set_charset", GeoIP_set_charset_Py, 1, "Set the charset for city records"},
-  {"last_netmask", GeoIP_last_netmask_Py, 1, "return the netmask depth of the last lookup"},
+  {"last_netmask", GeoIP_last_netmask_Py, 1, "Return the netmask depth of the last lookup"},
   {"country_code_by_name_v6", GeoIP_country_code_by_name_v6_Py, 1, "Lookup IPv6 Country Code By Name"},
   {"country_name_by_name_v6", GeoIP_country_name_by_name_v6_Py, 1, "Lookup IPv6 Country Name By Name"},
   {"country_code_by_addr_v6", GeoIP_country_code_by_addr_v6_Py, 1, "Lookup IPv6 Country Code By IP Address"},
   {"country_name_by_addr_v6", GeoIP_country_name_by_addr_v6_Py, 1, "Lookup IPv6 Country Name By IP Address"},
+  {"enable_teredo", GeoIP_enable_teredo_Py, 1, "Enable / disable teredo"},
+  {"teredo", GeoIP_teredo_Py, 1, "Returns true if teredo is enabled"},
   {"id_by_addr", GeoIP_id_by_addr_Py, 1, "Lookup Netspeed By IP Address"},
   {"id_by_name", GeoIP_id_by_name_Py, 1, "Lookup Netspeed By Name"},
   {NULL, NULL, 0, NULL}
@@ -492,6 +533,8 @@ static PyTypeObject GeoIP_GeoIPType = {
 static PyMethodDef GeoIP_Class_methods[] = {
   {"new", GeoIP_new_Py, 1, "GeoIP Constructor"},
   {"open", GeoIP_open_Py, 1, "GeoIP Constructor with database filename argument"},
+  {"lib_version", GeoIP_lib_version_Py, 1, "Returns the CAPI version"},  
+  {"time_zone_by_country_and_region", GeoIP_time_zone_by_country_and_region_Py, 1, "Returns time_zone for country, region"},  
   {NULL, NULL, 0, NULL}
 };
 

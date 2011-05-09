@@ -1,3 +1,7 @@
+	* Remove Confidence and Accuracy Database it is unsued anyway. ( Boris
+		Zentner )
+	* Add new methods enable_teredo, teredo, time_zone_by_country_and_region
+		and lib_version ( Boris Zentner )
 	* Add support for Confidence and Accuracy Database.
 	* Add support for Netspeed Database. via:
 		id_by_addr
