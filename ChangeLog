@@ -1,3 +1,4 @@
+1.2.5	2011-05-10
 	* Remove Confidence and Accuracy Database it is unsued anyway. ( Boris
 		Zentner )
 	* Add new methods enable_teredo, teredo, time_zone_by_country_and_region
