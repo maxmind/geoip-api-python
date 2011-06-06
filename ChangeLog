@@ -1,3 +1,6 @@
+1.2.6	2011-06-06
+	* Add new methods record_by_name_v6 and record_by_addr_v6 to support 
+		GeoIPCityv6 databases. ( Boris Zentner )
 1.2.5	2011-05-10
 	* Remove Confidence and Accuracy Database it is unsued anyway. ( Boris
 		Zentner )

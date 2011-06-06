@@ -337,6 +337,36 @@ static PyObject * GeoIP_populate_dict(GeoIP* gi, GeoIPRecord *gir) {
 	return retval;
 }
 
+static PyObject * GeoIP_record_by_addr_v6_Py(PyObject *self, PyObject *args) {
+  char * addr;
+  GeoIPRecord * gir;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &addr)) {
+    return NULL;
+  }
+  gir = GeoIP_record_by_addr_v6(GeoIP->gi, addr);
+	if (gir == NULL) {
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+	return GeoIP_populate_dict(GeoIP->gi, gir);
+}
+
+static PyObject * GeoIP_record_by_name_v6_Py(PyObject *self, PyObject *args) {
+  char * name;
+  GeoIPRecord * gir;
+  GeoIP_GeoIPObject* GeoIP = (GeoIP_GeoIPObject*)self;
+  if (!PyArg_ParseTuple(args, "s", &name)) {
+    return NULL;
+  }
+  gir = GeoIP_record_by_name_v6(GeoIP->gi, name);
+	if (gir == NULL) {
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
+	return GeoIP_populate_dict(GeoIP->gi, gir);
+}
+
 static PyObject * GeoIP_record_by_addr_Py(PyObject *self, PyObject *args) {
   char * addr;
   GeoIPRecord * gir;
@@ -465,8 +495,6 @@ static PyObject * GeoIP_time_zone_by_country_and_region_Py(PyObject *self, PyObj
   return Py_BuildValue("s",  GeoIP_time_zone_by_country_and_region(country_code, region));
 }
 
-
-
 static PyMethodDef GeoIP_Object_methods[] = {
   {"country_code_by_name", GeoIP_country_code_by_name_Py, 1, "Lookup Country Code By Name"},
   {"country_name_by_name", GeoIP_country_name_by_name_Py, 1, "Lookup Country Name By Name"},
@@ -490,6 +518,8 @@ static PyMethodDef GeoIP_Object_methods[] = {
   {"teredo", GeoIP_teredo_Py, 1, "Returns true if teredo is enabled"},
   {"id_by_addr", GeoIP_id_by_addr_Py, 1, "Lookup Netspeed By IP Address"},
   {"id_by_name", GeoIP_id_by_name_Py, 1, "Lookup Netspeed By Name"},
+  {"record_by_addr_v6", GeoIP_record_by_addr_v6_Py, 1, "Lookup City Region By IP Address"},
+  {"record_by_name_v6", GeoIP_record_by_name_v6_Py, 1, "Lookup City Region By Name"},
   {NULL, NULL, 0, NULL}
 };
 
