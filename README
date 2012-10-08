@@ -9,6 +9,7 @@ To Install:
 Usage:
 	See test.py for example usage with GeoIP Country
 	See test_org.py for example usage with GeoIP ISP and Organization
+        See test_domain.py for an example of GeoIP Domain usage
 	See test_city.py for example usage with GeoIP City
 	See test_region.py for example usage with GeoIP Region
 	See test_netspeed.py for example usage with GeoIP Netspeed
