@@ -253,30 +253,6 @@ void GeoIP_SetItemInt(PyObject *dict, const char * name, int value) {
 	Py_DECREF(valueObj);
 }
 
-void GeoIP_SetConfItemInt(PyObject *dict, const char * name, int value) {
-	PyObject * nameObj;
-	PyObject * valueObj;
-	nameObj = Py_BuildValue("s",name);
-	valueObj = value == GEOIP_UNKNOWN_CONF 
-          ? Py_BuildValue("") 
-          : Py_BuildValue("i",value);
-	PyDict_SetItem(dict,nameObj,valueObj);
-	Py_DECREF(nameObj);
-	Py_DECREF(valueObj);
-}
-
-void GeoIP_SetAccuracyItemInt(PyObject *dict, const char * name, int value) {
-	PyObject * nameObj;
-	PyObject * valueObj;
-	nameObj = Py_BuildValue("s",name);
-	valueObj = value == GEOIP_UNKNOWN_ACCURACY_RADIUS 
-          ? Py_BuildValue("") 
-          : Py_BuildValue("i",value);
-	PyDict_SetItem(dict,nameObj,valueObj);
-	Py_DECREF(nameObj);
-	Py_DECREF(valueObj);
-}
-
 static PyObject * GeoIP_region_populate_dict(GeoIPRegion * gir) {
   PyObject * retval;
   const char * region_name = NULL;
@@ -318,20 +294,6 @@ static PyObject * GeoIP_populate_dict(GeoIP* gi, GeoIPRecord *gir) {
 	  GeoIP_SetItemInt(retval,"metro_code",gir->dma_code);
 	  GeoIP_SetItemInt(retval,"area_code",gir->area_code);
         }
-
-/*
- * drop support for Confidence and Accuracy Database
- * for now
-
-        if ( gi->databaseType != GEOIP_CITY_EDITION_REV1 ){
-        GeoIP_SetConfItemInt(retval, "country_conf", gir->country_conf );
-        GeoIP_SetConfItemInt(retval, "region_conf",  gir->region_conf );
-        GeoIP_SetConfItemInt(retval, "city_conf",    gir->city_conf );
-        GeoIP_SetConfItemInt(retval, "postal_conf",  gir->postal_conf );
-
-        GeoIP_SetAccuracyItemInt(retval, "accuracy_radius", gir->accuracy_radius );
-
-*/
 
 	GeoIPRecord_delete(gir);
 	return retval;
