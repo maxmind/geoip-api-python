@@ -43,10 +43,14 @@ GeoIP_new_Py(PyObject* self, PyObject *args) {
 
   GeoIP = PyObject_New(GeoIP_GeoIPObject, &GeoIP_GeoIPType);
 
+  if ( !GeoIP )
+    return NULL;
+
   GeoIP->gi = GeoIP_new(flags);
 
   if (!GeoIP->gi) {
     PyErr_SetString(PyGeoIPError,  "Can't create GeoIP->gi object");
+    Py_DECREF(GeoIP);
     return NULL;
   }
 
@@ -65,10 +69,14 @@ GeoIP_open_Py(PyObject* self, PyObject *args) {
 
   GeoIP = PyObject_New(GeoIP_GeoIPObject, &GeoIP_GeoIPType);
 
+  if ( !GeoIP )
+    return NULL;
+
   GeoIP->gi = GeoIP_open(filename, flags);
 
   if (!GeoIP->gi) {
     PyErr_SetString(PyGeoIPError,  "Can't create GeoIP->gi object");
+    Py_DECREF(GeoIP);
     return NULL;
   }
 
@@ -226,31 +234,37 @@ static PyObject * GeoIP_id_by_name_Py(PyObject *self, PyObject *args) {
 void GeoIP_SetItemString(PyObject *dict, const char * name, const char * value) {
 	PyObject * nameObj;
 	PyObject * valueObj;
-	nameObj = Py_BuildValue("s",name);
-	valueObj = Py_BuildValue("s",value);
-	PyDict_SetItem(dict,nameObj,valueObj);
-	Py_DECREF(nameObj);
-	Py_DECREF(valueObj);
+	if (( nameObj = Py_BuildValue("s",name))){
+	  if ((valueObj = Py_BuildValue("s",value))){
+	    PyDict_SetItem(dict,nameObj,valueObj);
+	    Py_DECREF(valueObj);
+	  }
+	  Py_DECREF(nameObj);
+	}
 }
 
 void GeoIP_SetItemFloat(PyObject *dict, const char * name, float value) {
 	PyObject * nameObj;
 	PyObject * valueObj;
-	nameObj = Py_BuildValue("s",name);
-	valueObj = Py_BuildValue("f",value);
-	PyDict_SetItem(dict,nameObj,valueObj);
-	Py_DECREF(nameObj);
-	Py_DECREF(valueObj);
+	if (( nameObj = Py_BuildValue("s",name))){
+	  if (( valueObj = Py_BuildValue("f",value))){
+            PyDict_SetItem(dict,nameObj,valueObj);
+	    Py_DECREF(valueObj);
+	  }
+	  Py_DECREF(nameObj);
+	}
 }
 
 void GeoIP_SetItemInt(PyObject *dict, const char * name, int value) {
 	PyObject * nameObj;
 	PyObject * valueObj;
-	nameObj = Py_BuildValue("s",name);
-	valueObj = Py_BuildValue("i",value);
-	PyDict_SetItem(dict,nameObj,valueObj);
-	Py_DECREF(nameObj);
-	Py_DECREF(valueObj);
+	if ((nameObj = Py_BuildValue("s",name))){
+	  if ((valueObj = Py_BuildValue("i",value))){
+	    PyDict_SetItem(dict,nameObj,valueObj);
+	    Py_DECREF(valueObj);
+	  }
+	  Py_DECREF(nameObj);
+	}
 }
 
 static PyObject * GeoIP_region_populate_dict(GeoIPRegion * gir) {
