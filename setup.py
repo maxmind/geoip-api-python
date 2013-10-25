@@ -10,6 +10,7 @@ setup(
     name='GeoIP',
     version='1.2.8',
     description='MaxMind GeoIP Legacy Extension',
+    long_description=open('README.md').read(),
     author="MaxMind, Inc.",
     author_email="support@maxmind.com",
     url='http://www.maxmind.com/',
