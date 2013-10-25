@@ -8,9 +8,11 @@
 ## Installation
 
 With `pip`:
+
     $ pip install GeoIP
 
 From source:
+
     $ python setup.py build
     $ python setup.py install
 
