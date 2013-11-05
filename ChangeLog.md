@@ -1,4 +1,9 @@
+
 # Change Log
+
+## 1.2.9 (2013-11-04)
+
+* Packaging fix. PyPI-only release.
 
 ## 1.2.8 (2013-03-20)
 * Remove unused code. ( Boris Zentner )

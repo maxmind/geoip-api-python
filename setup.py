@@ -8,7 +8,7 @@ module1 = Extension('GeoIP',
 
 setup(
     name='GeoIP',
-    version='1.2.8',
+    version='1.2.9',
     description='MaxMind GeoIP Legacy Extension',
     long_description=open('README.md').read(),
     author="MaxMind, Inc.",
