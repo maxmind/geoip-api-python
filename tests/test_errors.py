@@ -35,11 +35,11 @@ def test_errors():
 
     assert_equals(gi.range_by_ip('1.1.1.1'), ('0.0.0.0', '12.87.117.255'))
 
-    assert_equals(gi.charset('1.1.1.1'), 0)
+    assert_equals(gi.charset(), 0)
 
     assert_equals(gi.set_charset(-1), 0)
 
-    assert_equals(gi.last_netmask('1.1.1.1'), 5)
+    assert_equals(gi.last_netmask(), 5)
 
     assert_equals(gi.country_code_by_name_v6('1.1.1.1'), None)
 
@@ -50,7 +50,7 @@ def test_errors():
     assert_equals(gi.country_name_by_addr_v6('1.1.1.1'), None)
 
     assert_equals(gi.enable_teredo(-100), 1)
-    assert_equals(gi.teredo('1.1.1.1'), 0)
+    assert_equals(gi.teredo(), 0)
     assert_equals(gi.id_by_addr('1.1.1.1'), 0)
     assert_equals(gi.id_by_name('1.1.1.1'), 0)
     assert_equals(gi.record_by_addr_v6('1.1.1.1'), None)
