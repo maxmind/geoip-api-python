@@ -408,6 +408,10 @@ static PyObject *GeoIP_region_by_name_Py(PyObject * self, PyObject * args)
         return NULL;
     }
     retval = GeoIP_region_by_name(GeoIP->gi, name);
+    if (retval == NULL) {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
     return GeoIP_region_populate_dict(retval);
 }
 
@@ -420,6 +424,10 @@ static PyObject *GeoIP_region_by_addr_Py(PyObject * self, PyObject * args)
         return NULL;
     }
     retval = GeoIP_region_by_addr(GeoIP->gi, name);
+    if (retval == NULL) {
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
     return GeoIP_region_populate_dict(retval);
 }
 
@@ -440,7 +448,7 @@ static PyObject *GeoIP_range_by_ip_Py(PyObject * self, PyObject * args)
 
     retval = Py_BuildValue("ss", start_stop_ptr[0], start_stop_ptr[1]);
 
-    /* relplace this code with GeoIP_range_by_ip_delete in the next version 
+    /* relplace this code with GeoIP_range_by_ip_delete in the next version
      * otherwise the users need 1.4.5 instead of 1.4.4 */
     if (retval) {
         if (start_stop_ptr[0])
