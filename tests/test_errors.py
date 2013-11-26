@@ -18,9 +18,9 @@ def test_errors():
 
     assert_equals(gi.country_name_by_addr('1.1.1.1'), None)
 
-    assert_equals(gi.asn_by_addr('1.1.1.1'), None)
+    assert_equals(gi.name_by_addr('1.1.1.1'), None)
 
-    assert_equals(gi.isp_by_addr('1.1.1.1'), None)
+    assert_equals(gi.name_by_name('1.1.1.1'), None)
 
     assert_equals(gi.org_by_addr('1.1.1.1'), None)
 

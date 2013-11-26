@@ -200,7 +200,7 @@ static PyObject *GeoIP_country_name_by_addr_Py(PyObject * self, PyObject * args)
     return Py_BuildValue("s", retval);
 }
 
-static PyObject *GeoIP_org_by_addr_Py(PyObject * self, PyObject * args)
+static PyObject *GeoIP_name_by_addr_Py(PyObject * self, PyObject * args)
 {
     char *name;
     char *org;
@@ -209,13 +209,13 @@ static PyObject *GeoIP_org_by_addr_Py(PyObject * self, PyObject * args)
     if (!PyArg_ParseTuple(args, "s", &name)) {
         return NULL;
     }
-    org = GeoIP_org_by_addr(GeoIP->gi, name);
+    org = GeoIP_name_by_addr(GeoIP->gi, name);
     ret = Py_BuildValue("s", org);
     free(org);
     return ret;
 }
 
-static PyObject *GeoIP_org_by_name_Py(PyObject * self, PyObject * args)
+static PyObject *GeoIP_name_by_name_Py(PyObject * self, PyObject * args)
 {
     char *name;
     char *org;
@@ -224,7 +224,7 @@ static PyObject *GeoIP_org_by_name_Py(PyObject * self, PyObject * args)
     if (!PyArg_ParseTuple(args, "s", &name)) {
         return NULL;
     }
-    org = GeoIP_org_by_name(GeoIP->gi, name);
+    org = GeoIP_name_by_name(GeoIP->gi, name);
     ret = Py_BuildValue("s", org);
     free(org);
     return ret;
@@ -536,14 +536,14 @@ static PyMethodDef GeoIP_Object_methods[] = {
       "Lookup Country Code By IP Address" },
     { "country_name_by_addr",    GeoIP_country_name_by_addr_Py,    METH_VARARGS,
       "Lookup Country Name By IP Address" },
-    { "asn_by_addr",             GeoIP_org_by_addr_Py,             METH_VARARGS,
-      "Lookup ASN By IP Address" },
-    { "isp_by_addr",             GeoIP_org_by_addr_Py,             METH_VARARGS,
-      "Lookup Organization By IP Address" },
-    { "org_by_addr",             GeoIP_org_by_addr_Py,             METH_VARARGS,
-      "Lookup Organization By IP Address" },
-    { "org_by_name",             GeoIP_org_by_name_Py,             METH_VARARGS,
-      "Lookup Organization or ISP By Name" },
+    { "name_by_addr",             GeoIP_name_by_addr_Py,           METH_VARARGS,
+      "Lookup ASN, Domain, ISP and Organisation By IP Address" },
+    { "name_by_name",             GeoIP_name_by_name_Py,           METH_VARARGS,
+      "Lookup ASN, Domain, ISP and Organisation By Name" },
+    { "org_by_addr",             GeoIP_name_by_addr_Py,            METH_VARARGS,
+      "Lookup ASN, Domain, ISP and Organisation By IP Address ( deprecated use name_by_addr instead )" },
+    { "org_by_name",             GeoIP_name_by_name_Py,            METH_VARARGS,
+      "Lookup ASN, Domain, ISP and Organisation By Name ( deprecated use name_by_addr instead )" },
     { "region_by_addr",          GeoIP_region_by_addr_Py,          METH_VARARGS,
       "Lookup Region By IP Address" },
     { "region_by_name",          GeoIP_region_by_name_Py,          METH_VARARGS,
