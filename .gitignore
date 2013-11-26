@@ -1,0 +1,16 @@
+*.pyc
+*.so
+*.sw?
+*~
+.coverage
+build
+core
+dist
+docs/_build
+docs/html
+env/
+MANIFEST
+maxminddb.egg-info/
+pylint.txt
+valgrind-python.supp
+violations.pyflakes.txt
