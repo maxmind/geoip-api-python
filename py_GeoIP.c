@@ -34,7 +34,7 @@ staticforward PyTypeObject GeoIP_GeoIPType;
 static PyObject *PyGeoIPError;
 
 typedef struct {
-    PyObject_HEAD;
+    PyObject_HEAD
     GeoIP *gi;
 } GeoIP_GeoIPObject;
 
@@ -606,11 +606,57 @@ static PyObject *GeoIP_GetAttr(PyObject * self, char *attrname)
 
 static PyTypeObject GeoIP_GeoIPType = {
     PyObject_HEAD_INIT(NULL)
-    .tp_name      = "GeoIP",
-    .tp_doc       = "GeoIP database object",
-    .tp_basicsize = sizeof(GeoIP_GeoIPObject),
-    .tp_dealloc   = GeoIP_GeoIP_dealloc,
-    .tp_getattr   = (getattrfunc)GeoIP_GetAttr,
+    0,
+    "GeoIP",
+    sizeof(GeoIP_GeoIPObject),
+    0,
+    GeoIP_GeoIP_dealloc,        /*tp_dealloc */
+    0,                          /*tp_print */
+    (getattrfunc) GeoIP_GetAttr,        /*tp_getattr */
+    0,                          /*tp_setattr */
+    0,                          /*tp_compare */
+    0,                          /*tp_repr */
+    0,                          /*tp_as_number */
+    0,                          /*tp_as_sequence */
+    0,                          /*tp_as_mapping */
+    0,                          /*tp_hash */
+    0,                         /*tp_call*/
+    0,                         /*tp_str*/
+    0,                         /*tp_getattro*/
+    0,                         /*tp_setattro*/
+    0,                         /*tp_as_buffer*/
+    Py_TPFLAGS_DEFAULT,        /*tp_flags*/
+    "GeoIP database object",   /* tp_doc */
+   0,                         /*  tp_traverse */
+   0,                         /*  tp_clear */
+   0,                         /*  tp_richcompare */
+   0,                         /*  tp_weaklistoffset */
+   0,                         /*  tp_iter */
+   0,                         /*  tp_iternext */
+   0,                         /*  tp_methods */
+   0,                         /*  tp_members */
+   0,                         /*  tp_getset */
+   0,               /*  tp_base */
+   0,                         /*  tp_dict */
+   0,                         /*  tp_descr_get */
+   0,                         /*  tp_descr_set */
+   0,                         /*  tp_dictoffset */
+   0,                         /*  tp_init */
+   0,                         /*  tp_alloc */
+   0,                         /*  tp_new */
+   0,                         /*  tp_free */
+   0,                         /*  tp_is_gc */
+   0,                         /*  tp_bases */
+   0,                         /*  tp_mro */
+   0,                         /*  tp_cache */
+   0,                         /*  tp_subclasses */
+   0                          /*  tp_weaklist */
+#if PY_MAJOR_VERSION >= 2 && PY_MINOR_VERSION >= 3
+   , 0                        /*  tp_del */
+#endif
+#if PY_MAJOR_VERSION >= 2 && PY_MINOR_VERSION >= 6
+   , 0                        /*  tp_version_tag */
+#endif
 };
 
 static PyMethodDef GeoIP_Class_methods[] = {
