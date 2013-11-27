@@ -1,12 +1,17 @@
-import multiprocessing
+import multiprocessing, sys
 
 try:
     from setuptools import setup, Extension
 except ImportError:
     from distutils.core import setup, Extension
 
+libs = ['GeoIP']
+
+if sys.platform == 'win32':
+    libs.append('ws2_32')
+
 module1 = Extension('GeoIP',
-                    libraries=['GeoIP'],
+                    libraries=libs,
                     sources=['py_GeoIP.c'])
 
 setup(
