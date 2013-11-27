@@ -7,9 +7,7 @@ except ImportError:
 
 module1 = Extension('GeoIP',
                     libraries=['GeoIP'],
-                    sources=['py_GeoIP.c'],
-                    library_dirs=['/usr/local/lib'],
-                    include_dirs=['/usr/local/include'])
+                    sources=['py_GeoIP.c'])
 
 setup(
     name='GeoIP',
