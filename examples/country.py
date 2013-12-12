@@ -3,6 +3,7 @@
 import GeoIP
 
 #gi = GeoIP.new(GeoIP.GEOIP_STANDARD)
+#gi = GeoIP.new(GeoIP.GEOIP_MMAP_CACHE)
 gi = GeoIP.new(GeoIP.GEOIP_MEMORY_CACHE)
 #gi = GeoIP.open("/usr/local/share/GeoIP/GeoIP.dat",GeoIP.GEOIP_STANDARD)
 
