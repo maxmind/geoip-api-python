@@ -215,6 +215,21 @@ static PyObject *GeoIP_name_by_addr_Py(PyObject * self, PyObject * args)
     return ret;
 }
 
+static PyObject *GeoIP_name_by_addr_v6_Py(PyObject * self, PyObject * args)
+{
+    char *name;
+    char *org;
+    PyObject *ret;
+    GeoIP_GeoIPObject *GeoIP = (GeoIP_GeoIPObject *)self;
+    if (!PyArg_ParseTuple(args, "s", &name)) {
+        return NULL;
+    }
+    org = GeoIP_name_by_addr_v6(GeoIP->gi, name);
+    ret = Py_BuildValue("s", org);
+    free(org);
+    return ret;
+}
+
 static PyObject *GeoIP_name_by_name_Py(PyObject * self, PyObject * args)
 {
     char *name;
@@ -225,6 +240,21 @@ static PyObject *GeoIP_name_by_name_Py(PyObject * self, PyObject * args)
         return NULL;
     }
     org = GeoIP_name_by_name(GeoIP->gi, name);
+    ret = Py_BuildValue("s", org);
+    free(org);
+    return ret;
+}
+
+static PyObject *GeoIP_name_by_name_v6_Py(PyObject * self, PyObject * args)
+{
+    char *name;
+    char *org;
+    PyObject *ret;
+    GeoIP_GeoIPObject *GeoIP = (GeoIP_GeoIPObject *)self;
+    if (!PyArg_ParseTuple(args, "s", &name)) {
+        return NULL;
+    }
+    org = GeoIP_name_by_name_v6(GeoIP->gi, name);
     ret = Py_BuildValue("s", org);
     free(org);
     return ret;
@@ -580,6 +610,10 @@ static PyMethodDef GeoIP_Object_methods[] = {
       "Lookup City Region By IP Address" },
     { "record_by_name_v6",       GeoIP_record_by_name_v6_Py,       METH_VARARGS,
       "Lookup City Region By Name" },
+    { "name_by_addr_v6",         GeoIP_name_by_addr_v6_Py,         METH_VARARGS,
+      "Lookup IPv6 ASN, Domain, ISP and Organisation By IP Address" },
+    { "name_by_name_v6",         GeoIP_name_by_name_v6_Py,         METH_VARARGS,
+      "Lookup IPv6 ASN, Domain, ISP and Organisation By Name" },
     { NULL,                      NULL,                             0,
       NULL }
 };
