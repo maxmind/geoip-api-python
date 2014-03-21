@@ -38,10 +38,10 @@
 
 /* Python 2.5 compatibility */
 #ifndef PyVarObject_HEAD_INIT
-    #  define PyVarObject_HEAD_INIT(x,y) PyObject_HEAD_INIT(x) y,
+    #  define PyVarObject_HEAD_INIT(x, y) PyObject_HEAD_INIT(x) y,
 #endif
 #ifndef PyModule_AddIntMacro
-    #  define PyModule_AddIntMacro(m, c) PyModule_AddIntConstant(m, #c, c)
+    #  define PyModule_AddIntMacro(m, c) PyModule_AddIntConstant(m, # c, c)
 #endif
 
 static PyTypeObject GeoIP_GeoIPType;
@@ -64,22 +64,23 @@ GeoIP_GeoIP_init(PyObject *self, PyObject *args, PyObject *kwargs)
 
     /* For consistency with the C API, positional arguments are in the
        order filename, flags; but it is filename that is optional. */
-    if (PyArg_ParseTupleAndKeywords(args, kwargs, "i", kwlist+1, &flags))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "i", kwlist + 1, &flags)) {
         GeoIP->gi = GeoIP_new(flags);
-
-    else {
+    } else{
         PyErr_Clear();
         if (PyArg_ParseTupleAndKeywords(args, kwargs, "si", kwlist,
-                                        &filename, &flags))
+                                        &filename, &flags)) {
             GeoIP->gi = GeoIP_open(filename, flags);
-        else
+        } else{
             return -1;
+        }
     }
 
     if (!GeoIP->gi) {
         /* Failure is probably due to a system-call-level failure. */
-        if (!filename)
+        if (!filename) {
             filename = GeoIPDBFileName[GEOIP_COUNTRY_EDITION];
+        }
         PyErr_SetFromErrnoWithFilename(GeoIP_GeoIPError, filename);
         return -1;
     }
@@ -540,8 +541,9 @@ static PyObject *GeoIP_new_Py(PyObject *UNUSED(self), PyObject * args)
 {
     int dummy;
     /* enforce calling convention */
-    if (!PyArg_ParseTuple(args, "i", &dummy))
+    if (!PyArg_ParseTuple(args, "i", &dummy)) {
         return NULL;
+    }
     return PyObject_Call((PyObject *)&GeoIP_GeoIPType, args, NULL);
 }
 
@@ -550,8 +552,9 @@ static PyObject *GeoIP_open_Py(PyObject *UNUSED(self), PyObject * args)
     char *dummy1;
     int dummy2;
     /* enforce calling convention */
-    if (!PyArg_ParseTuple(args, "si", &dummy1, &dummy2))
+    if (!PyArg_ParseTuple(args, "si", &dummy1, &dummy2)) {
         return NULL;
+    }
     return PyObject_Call((PyObject *)&GeoIP_GeoIPType, args, NULL);
 }
 
@@ -582,9 +585,9 @@ static PyMethodDef GeoIP_GeoIP_methods[] = {
       "Lookup Country Code By IP Address" },
     { "country_name_by_addr",    GeoIP_country_name_by_addr_Py,    METH_VARARGS,
       "Lookup Country Name By IP Address" },
-    { "name_by_addr",             GeoIP_name_by_addr_Py,           METH_VARARGS,
+    { "name_by_addr",            GeoIP_name_by_addr_Py,            METH_VARARGS,
       "Lookup ASN, Domain, ISP and Organisation By IP Address" },
-    { "name_by_name",             GeoIP_name_by_name_Py,           METH_VARARGS,
+    { "name_by_name",            GeoIP_name_by_name_Py,            METH_VARARGS,
       "Lookup ASN, Domain, ISP and Organisation By Name" },
     { "org_by_addr",             GeoIP_name_by_addr_Py,            METH_VARARGS,
       "Lookup ASN, Domain, ISP and Organisation By IP Address ( deprecated use name_by_addr instead )" },
@@ -656,70 +659,70 @@ static PyObject *GeoIP_get_database_edition(PyObject *self,
     GeoIP_GeoIPObject *GeoIP = (GeoIP_GeoIPObject *)self;
     return Py_BuildValue("z",
                          GeoIPDBDescription[GeoIP_database_edition
-                                            (GeoIP->gi)]);
+                                                (GeoIP->gi)]);
 }
 
 static PyGetSetDef GeoIP_GeoIP_getsets[] = {
     { "database_edition", GeoIP_get_database_edition, NULL,
       "Edition of the database ( country, city, ISP, etc )", NULL },
-    { "database_info", GeoIP_get_database_info, NULL,
+    { "database_info",    GeoIP_get_database_info,    NULL,
       "Information about the database", NULL },
-    { "GEOIP_STANDARD", GeoIP_get_GEOIP_STANDARD, NULL,
+    { "GEOIP_STANDARD",   GeoIP_get_GEOIP_STANDARD,   NULL,
       "Same as module-level GEOIP_STANDARD constant ( deprecated )", NULL },
-    { NULL, NULL, NULL, NULL, NULL }
+    { NULL,               NULL,                       NULL,NULL,NULL }
 };
 
 static PyTypeObject GeoIP_GeoIPType = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "GeoIP.GeoIP",               /*tp_name*/
-    sizeof(GeoIP_GeoIPObject),   /*tp_basicsize*/
-    0,                           /*tp_itemsize*/
-    GeoIP_GeoIP_dealloc,         /*tp_dealloc*/
-    0,                           /*tp_print*/
-    0,                           /*tp_getattr*/
-    0,                           /*tp_setattr*/
-    0,                           /*tp_compare*/
-    0,                           /*tp_repr*/
-    0,                           /*tp_as_number*/
-    0,                           /*tp_as_sequence*/
-    0,                           /*tp_as_mapping */
-    0,                           /*tp_hash*/
-    0,                           /*tp_call*/
-    0,                           /*tp_str*/
-    0,                           /*tp_getattro*/
-    0,                           /*tp_setattro*/
-    0,                           /*tp_as_buffer*/
-    Py_TPFLAGS_DEFAULT,          /*tp_flags*/
-    "GeoIP database object",     /*tp_doc*/
-    0,                           /*tp_traverse*/
-    0,                           /*tp_clear*/
-    0,                           /*tp_richcompare*/
-    0,                           /*tp_weaklistoffset*/
-    0,                           /*tp_iter*/
-    0,                           /*tp_iternext*/
-    GeoIP_GeoIP_methods,         /*tp_methods*/
-    0,                           /*tp_members*/
-    GeoIP_GeoIP_getsets,         /*tp_getset*/
-    0,                           /*tp_base*/
-    0,                           /*tp_dict*/
-    0,                           /*tp_descr_get*/
-    0,                           /*tp_descr_set*/
-    0,                           /*tp_dictoffset*/
-    GeoIP_GeoIP_init,            /*tp_init*/
-    0,                           /*tp_alloc*/
-    0,                           /*tp_new*/
-    0,                           /*tp_free*/
-    0,                           /*tp_is_gc*/
-    0,                           /*tp_bases*/
-    0,                           /*tp_mro*/
-    0,                           /*tp_cache*/
-    0,                           /*tp_subclasses*/
-    0,                           /*tp_weaklist*/
-    0,                           /*tp_del*/
+    "GeoIP.GeoIP",              /*tp_name*/
+    sizeof(GeoIP_GeoIPObject),  /*tp_basicsize*/
+    0,                          /*tp_itemsize*/
+    GeoIP_GeoIP_dealloc,        /*tp_dealloc*/
+    0,                          /*tp_print*/
+    0,                          /*tp_getattr*/
+    0,                          /*tp_setattr*/
+    0,                          /*tp_compare*/
+    0,                          /*tp_repr*/
+    0,                          /*tp_as_number*/
+    0,                          /*tp_as_sequence*/
+    0,                          /*tp_as_mapping */
+    0,                          /*tp_hash*/
+    0,                          /*tp_call*/
+    0,                          /*tp_str*/
+    0,                          /*tp_getattro*/
+    0,                          /*tp_setattro*/
+    0,                          /*tp_as_buffer*/
+    Py_TPFLAGS_DEFAULT,         /*tp_flags*/
+    "GeoIP database object",    /*tp_doc*/
+    0,                          /*tp_traverse*/
+    0,                          /*tp_clear*/
+    0,                          /*tp_richcompare*/
+    0,                          /*tp_weaklistoffset*/
+    0,                          /*tp_iter*/
+    0,                          /*tp_iternext*/
+    GeoIP_GeoIP_methods,        /*tp_methods*/
+    0,                          /*tp_members*/
+    GeoIP_GeoIP_getsets,        /*tp_getset*/
+    0,                          /*tp_base*/
+    0,                          /*tp_dict*/
+    0,                          /*tp_descr_get*/
+    0,                          /*tp_descr_set*/
+    0,                          /*tp_dictoffset*/
+    GeoIP_GeoIP_init,           /*tp_init*/
+    0,                          /*tp_alloc*/
+    0,                          /*tp_new*/
+    0,                          /*tp_free*/
+    0,                          /*tp_is_gc*/
+    0,                          /*tp_bases*/
+    0,                          /*tp_mro*/
+    0,                          /*tp_cache*/
+    0,                          /*tp_subclasses*/
+    0,                          /*tp_weaklist*/
+    0,                          /*tp_del*/
 #if PY_MAJOR_VERSION >= 3 || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION >= 6)
-    0,                           /*tp_version_tag*/
+    0,                          /*tp_version_tag*/
 #if PY_MAJOR_VERSION >= 4 || (PY_MAJOR_VERSION == 3 && PY_MINOR_VERSION >= 4)
-    0,                           /*tp_finalize*/
+    0,                          /*tp_finalize*/
 #endif
 #endif
 
@@ -740,7 +743,7 @@ static PyMethodDef GeoIP_module_methods[] = {
     { "time_zone_by_country_and_region",
       GeoIP_time_zone_by_country_and_region_Py, METH_VARARGS,
       "Returns time_zone for country, region" },
-    { NULL, NULL, 0, NULL }
+    { NULL,                              NULL,                0,NULL }
 };
 
 /* Code shared between 2.x and 3.x module initialization. */
@@ -755,8 +758,8 @@ GeoIP_populate_module(PyObject *m)
     const size_t total_ccodes = sizeof(GeoIP_country_code) /
                                 sizeof(GeoIP_country_code[0]);
 
-#define CHECK(expr) do { if (expr) goto fail; } while (0)
-#define CHECK_NULL(expr) do { if (!(expr)) goto fail; } while (0)
+#define CHECK(expr) do { if (expr) { goto fail; } } while (0)
+#define CHECK_NULL(expr) do { if (!(expr)) { goto fail; } } while (0)
 
     GeoIP_GeoIPType.tp_new = PyType_GenericNew;
     CHECK(PyType_Ready(&GeoIP_GeoIPType));
@@ -823,8 +826,9 @@ PyMODINIT_FUNC initGeoIP(void)
     PyObject *m = Py_InitModule3("GeoIP",
                                  GeoIP_module_methods,
                                  "MaxMind GeoIP databases - Python API.");
-    if (m)
+    if (m) {
         GeoIP_populate_module(m);
+    }
 }
 
 #else
@@ -844,10 +848,12 @@ static PyModuleDef GeoIP_module = {
 PyMODINIT_FUNC PyInit_GeoIP(void)
 {
     PyObject *m = PyModule_Create(&GeoIP_module);
-    if (!m)
+    if (!m) {
         return NULL;
-    if (GeoIP_populate_module(m))
+    }
+    if (GeoIP_populate_module(m)) {
         return NULL;
+    }
     return m;
 }
 
