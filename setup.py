@@ -1,4 +1,4 @@
-import multiprocessing, sys
+import sys
 
 try:
     from setuptools import setup, Extension
@@ -17,7 +17,7 @@ module1 = Extension('GeoIP',
 setup(
     name='GeoIP',
     version='1.2.9',
-    description='MaxMind GeoIP Legacy Extension',
+    description='MaxMind GeoIP Database - Python API',
     long_description=open('README.rst').read(),
     author="MaxMind, Inc.",
     author_email="support@maxmind.com",
@@ -35,6 +35,8 @@ setup(
         'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python',
         'Topic :: Internet :: Proxy Servers',
         'Topic :: Internet',

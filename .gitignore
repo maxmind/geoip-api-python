@@ -11,6 +11,8 @@ docs/html
 env/
 MANIFEST
 maxminddb.egg-info/
+GeoIP.egg-info/
+nose*.egg/
 pylint.txt
 valgrind-python.supp
 violations.pyflakes.txt
