@@ -85,6 +85,10 @@ GeoIP_GeoIP_init(PyObject *self, PyObject *args, PyObject *kwargs)
         return -1;
     }
 
+#if PY_MAJOR_VERSION >= 3
+    GeoIP_set_charset(GeoIP->gi, GEOIP_CHARSET_UTF8);
+#endif
+
     return 0;
 }
 
@@ -497,11 +501,13 @@ static PyObject *GeoIP_range_by_ip_Py(PyObject * self, PyObject * args)
     return retval;
 }
 
+#if PY_MAJOR_VERSION <= 2
 static PyObject *GeoIP_charset_Py(PyObject *self, PyObject *UNUSED(args))
 {
     GeoIP_GeoIPObject *GeoIP = (GeoIP_GeoIPObject *)self;
     return Py_BuildValue("i", GeoIP_charset(GeoIP->gi));
 }
+#endif
 
 static PyObject *GeoIP_set_charset_Py(PyObject * self, PyObject * args)
 {
@@ -603,8 +609,10 @@ static PyMethodDef GeoIP_GeoIP_methods[] = {
       "Lookup City Region By Name" },
     { "range_by_ip",             GeoIP_range_by_ip_Py,             METH_VARARGS,
       "Lookup start and end IP's for a given IP" },
+#if PY_MAJOR_VERSION <= 2
     { "charset",                 GeoIP_charset_Py,                 METH_NOARGS,
       "Return the current charset ( either GEOIP_CHARSET_ISO_8859_1 or GEOIP_CHARSET_UTF8 )" },
+#endif
     { "set_charset",             GeoIP_set_charset_Py,             METH_VARARGS,
       "Set the charset for city records" },
     { "last_netmask",            GeoIP_last_netmask_Py,            METH_NOARGS,

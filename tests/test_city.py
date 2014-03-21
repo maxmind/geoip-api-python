@@ -24,3 +24,26 @@ def test_city():
     }
 
     assert_equal(gir, record)
+
+
+def test_non_ascii_city():
+    gi = GeoIP.open("tests/data/GeoIPCity.dat", GeoIP.GEOIP_STANDARD)
+
+    gir = gi.record_by_addr("89.92.212.80")
+
+    record = {
+        'city': 'F\xe2ches-thumesnil',
+        'region_name': 'Nord-Pas-de-Calais',
+        'region': 'B4', 'area_code': 0,
+        'time_zone': 'Europe/Paris',
+        'longitude': 3.0808000564575195,
+        'metro_code': 0,
+        'country_code3': 'FRA',
+        'latitude': 50.5906982421875,
+        'postal_code': None,
+        'dma_code': 0,
+        'country_code': 'FR',
+        'country_name': 'France'
+    }
+
+    assert_equal(gir, record)
