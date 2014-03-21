@@ -29,8 +29,19 @@
     #  define UNUSED(x) UNUSED_ ## x
 #endif
 
-#if PY_MAJOR_VERSION >= 3
-    #  define PyString_FromString(s) PyUnicode_FromString(s)
+/* Python 2.x compatibility: in all the places PyUnicode_FromString is used,
+   we actually want whatever the default str() for that Python is */
+#if PY_MAJOR_VERSION <= 2
+    #  undef PyUnicode_FromString
+    #  define PyUnicode_FromString(s) PyString_FromString(s)
+#endif
+
+/* Python 2.5 compatibility */
+#ifndef PyVarObject_HEAD_INIT
+    #  define PyVarObject_HEAD_INIT(x,y) PyObject_HEAD_INIT(x) y,
+#endif
+#ifndef PyModule_AddIntMacro
+    #  define PyModule_AddIntMacro(m, c) PyModule_AddIntConstant(m, #c, c)
 #endif
 
 static PyTypeObject GeoIP_GeoIPType;
@@ -705,9 +716,11 @@ static PyTypeObject GeoIP_GeoIPType = {
     0,                           /*tp_subclasses*/
     0,                           /*tp_weaklist*/
     0,                           /*tp_del*/
+#if PY_MAJOR_VERSION >= 3 || (PY_MAJOR_VERSION == 2 && PY_MINOR_VERSION >= 6)
     0,                           /*tp_version_tag*/
 #if PY_MAJOR_VERSION >= 4 || (PY_MAJOR_VERSION == 3 && PY_MINOR_VERSION >= 4)
     0,                           /*tp_finalize*/
+#endif
 #endif
 
     /* More fields are present #ifdef COUNT_ALLOCS, but object.h
@@ -759,14 +772,14 @@ GeoIP_populate_module(PyObject *m)
     CHECK_NULL(ccont = PyDict_New());
 
     for (i = 0; i < total_ccodes; i++) {
-        CHECK_NULL(tmp = PyString_FromString(GeoIP_country_code[i]));
+        CHECK_NULL(tmp = PyUnicode_FromString(GeoIP_country_code[i]));
         PyTuple_SET_ITEM(ccode, i, tmp);
 
-        CHECK_NULL(tmp = PyString_FromString(GeoIP_country_name[i]));
+        CHECK_NULL(tmp = PyUnicode_FromString(GeoIP_country_name[i]));
         CHECK(PyDict_SetItemString(cname, GeoIP_country_code[i], tmp));
         Py_DECREF(tmp);
 
-        CHECK_NULL(tmp = PyString_FromString(GeoIP_country_continent[i]));
+        CHECK_NULL(tmp = PyUnicode_FromString(GeoIP_country_continent[i]));
         CHECK(PyDict_SetItemString(ccont, GeoIP_country_code[i], tmp));
         Py_DECREF(tmp);
     }
