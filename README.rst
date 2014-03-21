@@ -5,7 +5,7 @@ MaxMind GeoIP Legacy Python Extension API
 Requirements
 ------------
 
-* Python 2.x
+* Python 2.5+ or 3.3+
 * GeoIP C Library 1.4.7 or greater
 
 Installation
@@ -27,7 +27,7 @@ From source:
 Usage
 -----
 
-See the examples in `examples/`.
+See the examples in the ``examples`` folder.
 
 Troubleshooting
 ---------------
@@ -39,7 +39,7 @@ directory" error, add /usr/local/lib to /etc/ld.so.conf then run
 License
 -------
 
-Copyright (c) 2013 MaxMind LLC
+Copyright (c) 2014 MaxMind LLC
 
 All rights reserved.  This package is free software; it is licensed
 under the LGPL 2.1 or greater.
