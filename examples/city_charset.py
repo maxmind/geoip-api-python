@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# This example is only for Python 2. In Python 3, all returned strings are
+# unicode.
 import GeoIP
 
 # open the citydatabase. All cities return in iso-8859-1 by default
