@@ -507,7 +507,6 @@ static PyObject *GeoIP_charset_Py(PyObject *self, PyObject *UNUSED(args))
     GeoIP_GeoIPObject *GeoIP = (GeoIP_GeoIPObject *)self;
     return Py_BuildValue("i", GeoIP_charset(GeoIP->gi));
 }
-#endif
 
 static PyObject *GeoIP_set_charset_Py(PyObject * self, PyObject * args)
 {
@@ -519,6 +518,7 @@ static PyObject *GeoIP_set_charset_Py(PyObject * self, PyObject * args)
     return Py_BuildValue("i", GeoIP_set_charset(GeoIP->gi, charset));
 
 }
+#endif
 
 static PyObject *GeoIP_last_netmask_Py(PyObject * self, PyObject *UNUSED(args))
 {
@@ -612,9 +612,9 @@ static PyMethodDef GeoIP_GeoIP_methods[] = {
 #if PY_MAJOR_VERSION <= 2
     { "charset",                 GeoIP_charset_Py,                 METH_NOARGS,
       "Return the current charset ( either GEOIP_CHARSET_ISO_8859_1 or GEOIP_CHARSET_UTF8 )" },
-#endif
     { "set_charset",             GeoIP_set_charset_Py,             METH_VARARGS,
       "Set the charset for city records" },
+#endif
     { "last_netmask",            GeoIP_last_netmask_Py,            METH_NOARGS,
       "Return the netmask depth of the last lookup" },
     { "country_code_by_name_v6", GeoIP_country_code_by_name_v6_Py, METH_VARARGS,
