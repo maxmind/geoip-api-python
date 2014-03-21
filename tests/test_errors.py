@@ -1,5 +1,3 @@
-import sys
-
 import GeoIP
 from nose.tools import assert_equal
 
@@ -36,11 +34,6 @@ def test_errors():
     assert_equal(gi.record_by_name('1.1.1.1'), None)
 
     assert_equal(gi.range_by_ip('1.1.1.1'), ('0.0.0.0', '12.87.117.255'))
-
-    if sys.version_info[0] == 2:
-        assert_equal(gi.charset(), 0)
-
-        assert_equal(gi.set_charset(-1), 0)
 
     assert_equal(gi.last_netmask(), 5)
 
