@@ -16,7 +16,7 @@ module1 = Extension('GeoIP',
 
 setup(
     name='GeoIP',
-    version='1.2.9',
+    version='1.3.0',
     description='MaxMind GeoIP Legacy Database - Python API',
     long_description=open('README.rst').read(),
     author="MaxMind, Inc.",

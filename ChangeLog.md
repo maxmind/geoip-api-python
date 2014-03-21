@@ -1,6 +1,16 @@
 
 # Change Log
 
+## 1.3.0 (2014-03-21)
+
+* Python 3 support and significant code cleanup. ( Zack Weinberg )
+* The methods `name_by_addr`, `name_by_addr_v6`, `name_by_name`, and
+  `name_by_name_v6` were added for ISP, Org, and ASNum lookups.
+  ( Carlos Rodrigues )
+* Portability fixes.
+* Expose `GEOIP_MMAP_CACHE` from the C library. ( George Macon )
+* Unit tests were added.
+
 ## 1.2.9 (2013-11-04)
 
 * Packaging fix. PyPI-only release.
