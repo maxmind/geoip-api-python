@@ -1,5 +1,11 @@
-
 # Change Log
+
+## 1.3.1 (2014-03-21)
+
+* Fix for broken strings in Python 3. Strings with non-ASCII characters
+  would throw a UTF-8 decoding error. In Python 3, all strings from the
+  database are in UTF-8 and using `set_charset` to set the character set
+  to something other than UTF-8 will throw an `ValueError` exception.
 
 ## 1.3.0 (2014-03-21)
 
