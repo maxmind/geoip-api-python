@@ -695,6 +695,23 @@ static PyTypeObject GeoIP_GeoIPType = {
     0,                           /*tp_descr_set*/
     0,                           /*tp_dictoffset*/
     GeoIP_GeoIP_init,            /*tp_init*/
+    0,                           /*tp_alloc*/
+    0,                           /*tp_new*/
+    0,                           /*tp_free*/
+    0,                           /*tp_is_gc*/
+    0,                           /*tp_bases*/
+    0,                           /*tp_mro*/
+    0,                           /*tp_cache*/
+    0,                           /*tp_subclasses*/
+    0,                           /*tp_weaklist*/
+    0,                           /*tp_del*/
+    0,                           /*tp_version_tag*/
+#if PY_MAJOR_VERSION >= 4 || (PY_MAJOR_VERSION == 3 && PY_MINOR_VERSION >= 4)
+    0,                           /*tp_finalize*/
+#endif
+
+    /* More fields are present #ifdef COUNT_ALLOCS, but object.h
+       specifically says not to explicitly initialize them.  */
 };
 
 static PyMethodDef GeoIP_module_methods[] = {
@@ -800,11 +817,15 @@ PyMODINIT_FUNC initGeoIP(void)
 #else
 
 static PyModuleDef GeoIP_module = {
-    PyModuleDef_HEAD_INIT,
-    "GeoIP",
-    "MaxMind GeoIP databases - Python API",
-    -1,
-    GeoIP_module_methods
+    PyModuleDef_HEAD_INIT,                    /*m_base*/
+    "GeoIP",                                  /*m_name*/
+    "MaxMind GeoIP databases - Python API",   /*m_doc*/
+    -1,                                       /*m_size*/
+    GeoIP_module_methods,                     /*m_methods*/
+    0,                                        /*m_reload*/
+    0,                                        /*m_traverse*/
+    0,                                        /*m_clear*/
+    0,                                        /*m_free*/
 };
 
 PyMODINIT_FUNC PyInit_GeoIP(void)
