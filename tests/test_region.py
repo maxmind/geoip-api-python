@@ -1,5 +1,5 @@
 import GeoIP
-from nose.tools import assert_equals
+from nose.tools import assert_equal
 
 
 def test_region():
@@ -12,4 +12,4 @@ def test_region():
         'region_name': 'California',
         'country_code': 'US'
     }
-    assert_equals(gir, region)
+    assert_equal(gir, region)

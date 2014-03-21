@@ -29,6 +29,10 @@
     #  define UNUSED(x) UNUSED_ ## x
 #endif
 
+#if PY_MAJOR_VERSION >= 3
+    #  define PyString_FromString(s) PyUnicode_FromString(s)
+#endif
+
 static PyTypeObject GeoIP_GeoIPType;
 
 /* Exception object for python */
@@ -709,24 +713,23 @@ static PyMethodDef GeoIP_module_methods[] = {
     { NULL, NULL, 0, NULL }
 };
 
-PyMODINIT_FUNC initGeoIP(void)
+/* Code shared between 2.x and 3.x module initialization. */
+static int
+GeoIP_populate_module(PyObject *m)
 {
-    PyObject *m = NULL, *tmp = NULL, *ccode = NULL,
-             *cname = NULL, *ccont = NULL;
+    PyObject *tmp = NULL;
+    PyObject *ccode = NULL;
+    PyObject *cname = NULL;
+    PyObject *ccont = NULL;
     size_t i;
     const size_t total_ccodes = sizeof(GeoIP_country_code) /
                                 sizeof(GeoIP_country_code[0]);
 
-    GeoIP_GeoIPType.tp_new = PyType_GenericNew;
-    if (PyType_Ready(&GeoIP_GeoIPType))
-        return;
-
 #define CHECK(expr) do { if (expr) goto fail; } while (0)
 #define CHECK_NULL(expr) do { if (!(expr)) goto fail; } while (0)
 
-    CHECK_NULL(m = Py_InitModule3("GeoIP", GeoIP_module_methods,
-                                  "MaxMind GeoIP databases - Python API."));
-
+    GeoIP_GeoIPType.tp_new = PyType_GenericNew;
+    CHECK(PyType_Ready(&GeoIP_GeoIPType));
     Py_INCREF(&GeoIP_GeoIPType);
     CHECK(PyModule_AddObject(m, "GeoIP", (PyObject *)&GeoIP_GeoIPType));
 
@@ -767,7 +770,8 @@ PyMODINIT_FUNC initGeoIP(void)
     CHECK(PyModule_AddIntMacro(m, GEOIP_DIALUP_SPEED));
     CHECK(PyModule_AddIntMacro(m, GEOIP_CABLEDSL_SPEED));
     CHECK(PyModule_AddIntMacro(m, GEOIP_CORPORATE_SPEED));
-    return;
+
+    return 0;
 
 #undef CHECK
 #undef CHECK_NULL
@@ -779,4 +783,38 @@ PyMODINIT_FUNC initGeoIP(void)
     Py_XDECREF(tmp);
     Py_XDECREF(m);
     Py_XDECREF(GeoIP_GeoIPError); GeoIP_GeoIPError = NULL;
+    return -1;
 }
+
+#if PY_MAJOR_VERSION < 3
+
+PyMODINIT_FUNC initGeoIP(void)
+{
+    PyObject *m = Py_InitModule3("GeoIP",
+                                 GeoIP_module_methods,
+                                 "MaxMind GeoIP databases - Python API.");
+    if (m)
+        GeoIP_populate_module(m);
+}
+
+#else
+
+static PyModuleDef GeoIP_module = {
+    PyModuleDef_HEAD_INIT,
+    "GeoIP",
+    "MaxMind GeoIP databases - Python API",
+    -1,
+    GeoIP_module_methods
+};
+
+PyMODINIT_FUNC PyInit_GeoIP(void)
+{
+    PyObject *m = PyModule_Create(&GeoIP_module);
+    if (!m)
+        return NULL;
+    if (GeoIP_populate_module(m))
+        return NULL;
+    return m;
+}
+
+#endif

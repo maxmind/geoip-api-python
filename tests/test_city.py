@@ -1,5 +1,5 @@
 import GeoIP
-from nose.tools import assert_equals
+from nose.tools import assert_equal
 
 
 def test_city():
@@ -23,4 +23,4 @@ def test_city():
         'time_zone': 'America/Los_Angeles'
     }
 
-    assert_equals(gir, record)
+    assert_equal(gir, record)
