@@ -603,7 +603,7 @@ static PyMethodDef GeoIP_GeoIP_methods[] = {
     { "org_by_addr",             GeoIP_name_by_addr_Py,            METH_VARARGS,
       "Lookup ASN, Domain, ISP and Organisation By IP Address ( deprecated use name_by_addr instead )" },
     { "org_by_name",             GeoIP_name_by_name_Py,            METH_VARARGS,
-      "Lookup ASN, Domain, ISP and Organisation By Name ( deprecated use name_by_addr instead )" },
+      "Lookup ASN, Domain, ISP and Organisation By Name ( deprecated use name_by_name instead )" },
     { "region_by_addr",          GeoIP_region_by_addr_Py,          METH_VARARGS,
       "Lookup Region By IP Address" },
     { "region_by_name",          GeoIP_region_by_name_Py,          METH_VARARGS,

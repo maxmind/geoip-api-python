@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.3.x (2014-XX-XX)
+
+* The description for `org_by_name` incorrectly directed people to use
+  `name_by_addr` rather than `name_by_name`.
+
 ## 1.3.1 (2014-03-21)
 
 * Fix for broken strings in Python 3. Strings with non-ASCII characters
