@@ -10,9 +10,15 @@ libs = ['GeoIP']
 if sys.platform == 'win32':
     libs.append('ws2_32')
 
+compile_args = []
+# http://bugs.python.org/issue969718
+if sys.version_info[0] == 2:
+    compile_args.append('-fno-strict-aliasing')
+
 module1 = Extension('GeoIP',
                     libraries=libs,
-                    sources=['py_GeoIP.c'])
+                    sources=['py_GeoIP.c'],
+                    extra_compile_args=compile_args)
 
 setup(
     name='GeoIP',
