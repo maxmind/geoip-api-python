@@ -1,9 +1,14 @@
 # Change Log
 
-## 1.3.x (2014-XX-XX)
+## 1.3.2 (2014-08-22)
 
 * The description for `org_by_name` incorrectly directed people to use
   `name_by_addr` rather than `name_by_name`.
+* Previously `GeoIP.country_names` was populated from `GeoIP_country_name` in
+  the libGeoIP C API. Some versions of the libGeoIP include non-ASCII
+  ISO-8859-1 characters in these names, causing encoding errors under Python
+  3. When installed under Python 3, this API now uses UTF-8 country names to
+  populate this dict. Reported and fixed by Sergey Farbotka. GitHub PR #15.
 
 ## 1.3.1 (2014-03-21)
 
