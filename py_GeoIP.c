@@ -789,7 +789,11 @@ GeoIP_populate_module(PyObject *m)
         CHECK_NULL(tmp = PyUnicode_FromString(GeoIP_country_code[i]));
         PyTuple_SET_ITEM(ccode, i, tmp);
 
+#if PY_MAJOR_VERSION >= 3
         CHECK_NULL(tmp = PyUnicode_FromString(GeoIP_utf8_country_name[i]));
+#else
+        CHECK_NULL(tmp = PyUnicode_FromString(GeoIP_country_name[i]));
+#endif
         CHECK(PyDict_SetItemString(cname, GeoIP_country_code[i], tmp));
         Py_DECREF(tmp);
 
