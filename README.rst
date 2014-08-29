@@ -6,7 +6,7 @@ Requirements
 ------------
 
 * Python 2.5+ or 3.3+
-* GeoIP C Library 1.4.7 or greater
+* GeoIP Legacy C Library 1.4.7 or greater
 
 Installation
 ------------
