@@ -20,8 +20,8 @@
 
 #include <Python.h>
 
-#include "GeoIP.h"
-#include "GeoIPCity.h"
+#include <GeoIP.h>
+#include <GeoIPCity.h>
 
 #ifdef __GNUC__
     #  define UNUSED(x) UNUSED_ ## x __attribute__((__unused__))
