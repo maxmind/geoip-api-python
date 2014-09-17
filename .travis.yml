@@ -26,3 +26,17 @@ notifications:
       - dev@maxmind.com
     on_success: change
     on_failure: always
+
+env:
+  global:
+   - secure: "YbJG01/5GiJOb/KFxBUHpEitrMQ+QIYxUQ6Jp6gZrR7hta7CZDbxt2lvGTV6y4S/8P9z/r94B1kMaf+RvDzrF/qNyinY1XvSZ+DSqoBIX8scultP409IAJBgQ07X6lU0Q0PJOmbK+7J7tYlLh/L06Fp1URRNcDsjRcTS4IomqY0="
+
+addons:
+  coverity_scan:
+    project:
+      name: "maxmind/geoip-api-python"
+      description: "Build submitted via Travis CI"
+    notification_email: oschwald@gmail.com
+    build_command_prepend: "python setup.py clean"
+    build_command: "python setup.py build"
+    branch_pattern: .coverity.*
