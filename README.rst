@@ -2,6 +2,20 @@
 MaxMind GeoIP Legacy Python Extension API
 =========================================
 
+End of Life
+-----------
+
+MaxMind will be retiring the GeoIP Legacy databases at the end of May
+2022. Until then, this library will only receive critical security and bug
+fixes. Support for this library will end completely with the last release of
+the legacy GeoIP databases.
+
+We recommend that you upgrade to our GeoIP2 databases. You can read these
+from Python using `our GeoIP2 Python API <https://github.com/maxmind/GeoIP2-python>`_.
+
+See `our blog post <https://blog.maxmind.com/2020/06/01/retirement-of-geoip-legacy-downloadable-databases-in-may-2022/>`_
+for more information.
+
 Requirements
 ------------
 
